@@ -8,28 +8,22 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/query.hpp",
         "REmatch/constants.hpp",
         "REmatch/match_generator.hpp"
-    },
-    link = {"REmatch", "stdc++"}
-)
-@Namespace("REmatch::library_interface")
-@Name("MatchGenerator")
+}, link = { "REmatch", "stdc++" })
+@Namespace("REmatch")
 public class MatchGenerator extends Pointer {
-    
-    // static { System.loadLibrary("jniREmatch"); }
-    static { JNILoader.load("jniREmatch"); }
-
-    public MatchGenerator(Pointer p) { 
-        super(p); 
+    static {
+        JNILoader.load("jniREmatch");
     }
 
-    // Método para obtener el iterador al inicio
-    public native @ByVal MatchGeneratorIterator begin();
+    public MatchGenerator(Pointer p) {
+        super(p);
+    }
 
-    // Método para obtener el iterador al final
-    public native @ByVal MatchGeneratorIterator end();
+    public native @ByVal MatchIterator begin();
 
-    public static void main(String[] args){
+    public native @ByVal MatchIterator end();
+
+    public static void main(String[] args) {
         System.out.println("Hello, World!");
-    
     }
 }

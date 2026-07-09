@@ -7,12 +7,14 @@ public class MultiQuery {
 
     private final javacpp.MultiQuery cppMultiQuery;
 
-    public MultiQuery(String pattern, Flags flags, int maxMempoolDuplications, int maxDeterministicStates) {
-        this.cppMultiQuery = new javacpp.MultiQuery(pattern, flags.getValue(), maxMempoolDuplications, maxDeterministicStates);
+    public MultiQuery(String pattern, Flags flags, int maxMempoolDuplications, int maxDeterministicStates,
+            int bufferSize) {
+        this.cppMultiQuery = new javacpp.MultiQuery(pattern, flags.getValue(), maxMempoolDuplications,
+                maxDeterministicStates, bufferSize);
     }
 
     public MultiQuery(String pattern, Flags flags) {
-        this(pattern, flags, 8, 2000);
+        this(pattern, flags, 8, 2000, 1024); // TODO:
     }
 
     public boolean check(String document) {
@@ -28,9 +30,9 @@ public class MultiQuery {
         return variables;
     }
 
-    public MultiMatch findOne(String document) {
-        return new MultiMatch(cppMultiQuery.findone(document));
-    }
+    // public MultiMatch findOne(String document) {
+    //     return new MultiMatch(cppMultiQuery.findone(document));
+    // }
 
     public List<MultiMatch> findMany(String document, int limit) {
         javacpp.MultiMatchVector matches = cppMultiQuery.findmany(document, limit);

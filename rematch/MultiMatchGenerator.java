@@ -11,7 +11,7 @@ public class MultiMatchGenerator implements Iterable<MultiMatch> {
     }
 
     @Override
-    public MultiMatchGeneratorIterator iterator() {
-        return new MultiMatchGeneratorIterator(generator.begin(), generator.end());
+    public MultiMatchIterator iterator() {
+        return new MultiMatchIterator(generator.begin(), generator.end());
     }
 }

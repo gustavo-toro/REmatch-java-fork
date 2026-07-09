@@ -67,7 +67,7 @@ add_custom_command(
             javacpp.Match
             javacpp.Span
             javacpp.StringSpanMap
-            javacpp.MatchGeneratorIterator
+            javacpp.MatchIterator
             javacpp.MatchGenerator
             javacpp.StringVector
             javacpp.MatchVector
@@ -75,10 +75,12 @@ add_custom_command(
             javacpp.MultiQuery
             javacpp.MultiMatch
             javacpp.MultiMatchVector
-            javacpp.MultiMatchGeneratorIterator
+            javacpp.MultiMatchIterator
             javacpp.MultiMatchGenerator
             javacpp.JNILoader
             javacpp.NativeLoader
+            javacpp.Reader
+            javacpp.ReaderWrapper
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/classes"
     COMMENT "Generando un solo JNI wrapper con javacpp"
     DEPENDS ${JAVA_CLASSES_STAMP}
@@ -114,7 +116,7 @@ add_custom_target(RunJavaClass2 ALL
             -cp "${OUT_DIR}:${JAVACPP_JAR}"
             -Djava.library.path=${CMAKE_SOURCE_DIR}/build/jni  # donde buscar la librería libjniREmatch.so 
             ${MAIN_CLASS}
-    DEPENDS CompileJava2
+    DEPENDS CompileJava2 GenerateJNIWrapper
     COMMENT "Running Main.java with JNI"
 )
 
@@ -143,7 +145,7 @@ if(BUILD_JAR_LIBRARY)
         COMMAND ${CMAKE_COMMAND} -E copy ${MANIFEST_FILE} ${JAR_BUILD_DIR}/META-INF/MANIFEST.MF
         COMMAND jar cfm ${JAR_OUTPUT_FILE} ${JAR_BUILD_DIR}/META-INF/MANIFEST.MF -C ${JAR_BUILD_DIR} .
         COMMENT "Empaquetando rematch.jar con clases + .so"
-        DEPENDS CompileJava2
+        DEPENDS RunJavaClass2
     )
 
     add_custom_target(BuildJarLibrary ALL

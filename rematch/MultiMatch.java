@@ -70,13 +70,13 @@ public class MultiMatch {
         return new MultiMatch(sub);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        MultiMatch other = (MultiMatch) obj;
-        return cppMultiMatch.operatorEquals(other.cppMultiMatch);
-    }
+    // @Override
+    // public boolean equals(Object obj) {
+    //     if (this == obj) return true;
+    //     if (obj == null || getClass() != obj.getClass()) return false;
+    //     MultiMatch other = (MultiMatch) obj;
+    //     return cppMultiMatch.operatorEquals(other.cppMultiMatch);
+    // }
     // public boolean equals(MultiMatch other) {
     //     return cppMultiMatch.operatorEquals(other.cppMultiMatch);
     // }

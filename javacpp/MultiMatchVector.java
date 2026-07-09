@@ -3,17 +3,16 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-
-@Platform(include = {"<vector>", "REmatch/multi_match.hpp"}, link = {"REmatch", "stdc++"})
-@Namespace("std") 
-@Name("vector<REmatch::library_interface::MultiMatch>") 
+@Platform(include = { "<vector>", "REmatch/multi_match.hpp" }, link = { "REmatch", "stdc++" })
+@Namespace("std")
+@Name("vector<REmatch::MultiMatch>")
 public class MultiMatchVector extends Pointer {
+    static {
+        JNILoader.load("jniREmatch");
+    }
 
-    // static { System.loadLibrary("jniREmatch"); }
-    static { JNILoader.load("jniREmatch"); }
-
-    public MultiMatchVector() { 
-        allocate(); 
+    public MultiMatchVector() {
+        allocate();
     }
 
     private native void allocate();
@@ -23,7 +22,6 @@ public class MultiMatchVector extends Pointer {
     public native @ByVal MultiMatch at(@Cast("size_t") long index);
 
     public native void push_back(@ByVal MultiMatch value);
-
 
     public static void main(String[] args) {
 

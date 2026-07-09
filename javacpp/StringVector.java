@@ -3,12 +3,12 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = {"<vector>", "<string>"}, link = {"REmatch", "stdc++"})
+@Platform(include = { "<vector>", "<string>" }, link = { "REmatch", "stdc++" })
 @Name("std::vector<std::string>")
 public class StringVector extends Pointer {
-    
-    // static { System.loadLibrary("jniREmatch"); }
-    static { JNILoader.load("jniREmatch"); }
+    static {
+        JNILoader.load("jniREmatch");
+    }
 
     public StringVector() {
         allocate();
@@ -17,7 +17,9 @@ public class StringVector extends Pointer {
     private native void allocate();
 
     public native @Cast("size_t") long size();
+
     public native @StdString String at(@Cast("size_t") long i);
+
     public native void push_back(@StdString String value);
 
     @Override
@@ -33,7 +35,7 @@ public class StringVector extends Pointer {
         sb.append("]");
         return sb.toString();
     }
-    
+
     public static void main(String[] args) {
 
         // // Crear una instancia de StringVector

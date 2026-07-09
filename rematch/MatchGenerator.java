@@ -1,8 +1,5 @@
 package rematch;
 
-
-import java.util.Iterator;
-
 public class MatchGenerator implements Iterable<Match> {
     private final javacpp.MatchGenerator generator;
 
@@ -11,7 +8,7 @@ public class MatchGenerator implements Iterable<Match> {
     }
 
     @Override
-    public MatchGeneratorIterator iterator() {
-        return new MatchGeneratorIterator(generator.begin(), generator.end());
+    public MatchIterator iterator() {
+        return new MatchIterator(generator.begin(), generator.end());
     }
 }

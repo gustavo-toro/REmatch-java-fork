@@ -1,12 +1,13 @@
 package rematch;
+
 import java.util.Iterator;
 
-public class MultiMatchGeneratorIterator implements Iterator<MultiMatch> {
+public class MultiMatchIterator implements Iterator<MultiMatch> {
 
-    private final javacpp.MultiMatchGeneratorIterator current;
-    private final javacpp.MultiMatchGeneratorIterator end;
+    private final javacpp.MultiMatchIterator current;
+    private final javacpp.MultiMatchIterator end;
 
-    public MultiMatchGeneratorIterator(javacpp.MultiMatchGeneratorIterator begin, javacpp.MultiMatchGeneratorIterator end) {
+    public MultiMatchIterator(javacpp.MultiMatchIterator begin, javacpp.MultiMatchIterator end) {
         this.current = begin;
         this.end = end;
     }
@@ -24,15 +25,15 @@ public class MultiMatchGeneratorIterator implements Iterator<MultiMatch> {
     }
 
     public MultiMatch operatorStar() {
-        current.operator_star();  
+        current.operator_star();
         return new MultiMatch(current.operator_star());
     }
 
-    public boolean operatorEquals(MultiMatchGeneratorIterator other) {
+    public boolean operatorEquals(MultiMatchIterator other) {
         return current.operatorEquals(other.current);
     }
 
-    public boolean operatorNotEquals(MultiMatchGeneratorIterator other) {
+    public boolean operatorNotEquals(MultiMatchIterator other) {
         return current.operatorNotEquals(other.current);
     }
 }

@@ -10,20 +10,20 @@ public class Match {
         this.cppMatch = cppMatch;
     }
 
-    public int start(String variableName) {
-        return (int) this.cppMatch.start(variableName);
+    public long start(String variableName) {
+        return this.cppMatch.start(variableName);
     }
 
-    public int start(int variableId) {
-        return (int) this.cppMatch.start(variableId);
+    public long start(int variableId) {
+        return this.cppMatch.start(variableId);
     }
 
-    public int end(String variableName) {
-        return (int) this.cppMatch.end(variableName);
+    public long end(String variableName) {
+        return this.cppMatch.end(variableName);
     }
 
-    public int end(int variableId) {
-        return (int) this.cppMatch.end(variableId);
+    public long end(int variableId) {
+        return this.cppMatch.end(variableId);
     }
 
     public String group(String variableName) {
@@ -42,7 +42,6 @@ public class Match {
         return this.cppMatch.span(variableName);
     }
 
-   
     public String[] variables() {
         javacpp.StringVector cppVariables = this.cppMatch.variables();
         String[] variables = new String[(int) cppVariables.size()];
@@ -58,19 +57,17 @@ public class Match {
         javacpp.StringSpanMap cppGroupDict = this.cppMatch.groupdict();
         javacpp.StringVector vars = this.cppMatch.variables();
         Map<String, javacpp.Span> groupDict = new HashMap<>();
-        
+
         for (long i = 0; i < vars.size(); i++) {
             String key = vars.at(i).toString();
             javacpp.Span span = cppGroupDict.at(key);
             groupDict.put(key, span);
         }
-        //  result.groupdict().at("x").first() + ", " + result.groupdict().at("x").second());
+        // result.groupdict().at("x").first() + ", " +
+        // result.groupdict().at("x").second());
 
         return groupDict;
     }
-
-
-
 
     public boolean empty() {
         return this.cppMatch.empty();
@@ -80,5 +77,4 @@ public class Match {
         return this.cppMatch.to_string();
     }
 
-    
 }
