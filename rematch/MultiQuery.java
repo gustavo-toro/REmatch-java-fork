@@ -13,6 +13,10 @@ public class MultiQuery {
                 maxDeterministicStates, bufferSize);
     }
 
+    public MultiQuery(String pattern) {
+        this(pattern, Flags.none(), 8, 2000, 1024); // TODO:
+    }
+
     public MultiQuery(String pattern, Flags flags) {
         this(pattern, flags, 8, 2000, 1024); // TODO:
     }
@@ -30,9 +34,13 @@ public class MultiQuery {
         return variables;
     }
 
-    // public MultiMatch findOne(String document) {
-    //     return new MultiMatch(cppMultiQuery.findone(document));
-    // }
+    public MultiMatch findOne(String document) {
+        javacpp.OptionalMultiMatch match = cppMultiQuery.findone(document);
+        if (match.hasValue()) {
+            return new MultiMatch(match.value());
+        }
+        return null;
+    }
 
     public List<MultiMatch> findMany(String document, int limit) {
         javacpp.MultiMatchVector matches = cppMultiQuery.findmany(document, limit);

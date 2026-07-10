@@ -31,7 +31,7 @@ public class Query extends Pointer {
 
     public native @ByVal StringVector variables();
 
-    // public native @ByVal Match findone(@Const @ByRef @StdString String document);
+    public native @ByVal OptionalMatch findone(@Const @ByRef @StdString String document);
 
     public native @ByVal MatchVector findmany(@Const @ByRef @StdString String document,
             @Cast("uint_fast32_t") int limit);

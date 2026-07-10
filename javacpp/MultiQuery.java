@@ -30,7 +30,7 @@ public class MultiQuery extends Pointer {
 
     public native @ByVal StringVector variables();
 
-    // public native @ByVal MultiMatch findone(String document);
+    public native @ByVal OptionalMultiMatch findone(String document);
 
     public native @ByVal MultiMatchVector findmany(@Const @ByRef @StdString String document,
             @Cast("uint_fast32_t") int limit);

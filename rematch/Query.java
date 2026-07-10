@@ -34,10 +34,13 @@ public class Query {
     }
 
 
-    // public Match findOne(String document) {
-    //     javacpp.Match match = cppQuery.findone(document);
-    //     return new Match(match);
-    // }
+    public Match findOne(String document) {
+        javacpp.OptionalMatch match = cppQuery.findone(document);
+        if (match.hasValue()) {
+            return new Match(match.value());
+        }
+        return null;
+    }
 
     public List<Match> findMany(String document, int limit) {
         javacpp.MatchVector cppMatches = cppQuery.findmany(document, limit);
