@@ -28,16 +28,26 @@ public class MultiQuery extends Pointer {
 
     public native boolean check(@Const @ByRef @StdString String document);
 
+    public native boolean check(Reader reader);
+
     public native @ByVal StringVector variables();
 
     public native @ByVal OptionalMultiMatch findone(String document);
 
+    public native @ByVal OptionalMultiMatch findone(Reader reader);
+
     public native @ByVal MultiMatchVector findmany(@Const @ByRef @StdString String document,
             @Cast("uint_fast32_t") int limit);
 
+    public native @ByVal MultiMatchVector findmany(Reader reader, @Cast("uint_fast32_t") int limit);
+
     public native @ByVal MultiMatchVector findall(@Const @ByRef @StdString String document);
 
+    public native @ByVal MultiMatchVector findall(Reader reader);
+
     public native @ByVal MultiMatchGenerator finditer(@Const @ByRef @StdString String document);
+
+    public native @ByVal MultiMatchGenerator finditer(Reader reader);
 
     public static void main(String[] args) {
         try {
@@ -87,35 +97,42 @@ public class MultiQuery extends Pointer {
             // System.out.println("———— String del multiMatch: " + result.to_string());
             // System.out.println("—— MULTIMATCH::SPANS()");
             // long size = result.spans(variableId).size();
-            // System.out.println("————— Spans encontrados: " + result.spans(variableId).size());
+            // System.out.println("————— Spans encontrados: " +
+            // result.spans(variableId).size());
             // for (long i = 0; i < size; i++) {
-            //     Span span = result.spans(variableId).at(i); // Obtener cada Span
-            //     long first = span.first();
-            //     long second = span.second();
-            //     System.out.println("————— Span " + i + ": (" + first + ", " + second + ")");
+            // Span span = result.spans(variableId).at(i); // Obtener cada Span
+            // long first = span.first();
+            // long second = span.second();
+            // System.out.println("————— Span " + i + ": (" + first + ", " + second + ")");
             // }
             // System.out.println("—— MULTIMATCH::VARIABLES()");
             // StringVector variables = result.variables();
-            // System.out.println("————— Variables encontradas en el multiMatch (desde MultiMatch): " + variables.size());
+            // System.out.println("————— Variables encontradas en el multiMatch (desde
+            // MultiMatch): " + variables.size());
             // for (long i = 0; i < variables.size(); i++) {
-            //     System.out.println("————— Var " + i + ": " + variables.at(i));
+            // System.out.println("————— Var " + i + ": " + variables.at(i));
             // }
             // System.out.println("—— MULTIMATCH::GROUPS()");
             // StringVector groupResults = result.groups(variableId);
             // StringVector groupResults2 = result.groups("subdomains");
-            // System.out.println("————— Grupos por variable_id " + "'" + variableId + "'" + ": " + groupResults);
-            // System.out.println("————— Grupos por variable_name 'subdomains': " + groupResults2);
+            // System.out.println("————— Grupos por variable_id " + "'" + variableId + "'" +
+            // ": " + groupResults);
+            // System.out.println("————— Grupos por variable_name 'subdomains': " +
+            // groupResults2);
             // System.out.println("—— MULTIMATCH::SUBMATCH()");
             // long start = result.spans(variableId).at(0).first();
             // long end = result.spans(variableId).at(0).second();
             // Span spanSubmatch = new Span(start, end);
-            // MultiMatch submatch = result.submatch(spanSubmatch); // Obtener el submatch para el intervalo especificado
+            // MultiMatch submatch = result.submatch(spanSubmatch); // Obtener el submatch
+            // para el intervalo especificado
             // System.out.println(
-            //         "————— Submatch encontrado para la variable " + "'" + variableId + "':" + submatch.to_string());
+            // "————— Submatch encontrado para la variable " + "'" + variableId + "':" +
+            // submatch.to_string());
             // StringVector variablesSubmatch = submatch.groups(variableId);
-            // System.out.println("————— Variables encontradas en el submatch: " + variablesSubmatch.size());
+            // System.out.println("————— Variables encontradas en el submatch: " +
+            // variablesSubmatch.size());
             // for (long i = 0; i < variablesSubmatch.size(); i++) {
-            //     System.out.println("————— Variable " + i + ": " + variablesSubmatch.at(i));
+            // System.out.println("————— Variable " + i + ": " + variablesSubmatch.at(i));
             // }
             // System.out.println("—— MULTIMATCH::OPERATOREQUALS()");
             // String document2 = "xyz.mail@otherdomain.com\n";
@@ -123,11 +140,15 @@ public class MultiQuery extends Pointer {
             // String test_document1 = "cperez@gmail.com\n";
             // MultiMatch match2 = multiQuery.findone(document2);
             // MultiMatch match3 = multiQuery.findone(document3);
-            // System.out.println("————— match1 == match2: " + result.operatorEquals(match2)); // Esperado: false
-            // System.out.println("————— match1 == match3: " + result.operatorEquals(match3)); // Esperado: true
-            // System.out.println("————— match2 == match3: " + match2.operatorEquals(match3)); // Esperado: false
+            // System.out.println("————— match1 == match2: " +
+            // result.operatorEquals(match2)); // Esperado: false
+            // System.out.println("————— match1 == match3: " +
+            // result.operatorEquals(match3)); // Esperado: true
+            // System.out.println("————— match2 == match3: " +
+            // match2.operatorEquals(match3)); // Esperado: false
             // System.out.println("————— String de Match1: " + result.to_string());
-            // System.out.println("————— String de Match3: " + match3.to_string()); // por qué su operatorEquals es false?
+            // System.out.println("————— String de Match3: " + match3.to_string()); // por
+            // qué su operatorEquals es false?
 
             System.out.println("\nMULTIQUERY::FINDMANY()");
             int findNumber = 3;

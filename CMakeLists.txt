@@ -65,6 +65,8 @@ add_custom_command(
             javacpp.Flags
             javacpp.Query
             javacpp.Match
+            javacpp.OptionalMatch
+            javacpp.OptionalMultiMatch
             javacpp.Span
             javacpp.StringSpanMap
             javacpp.MatchIterator

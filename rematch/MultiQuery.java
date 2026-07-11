@@ -25,6 +25,10 @@ public class MultiQuery {
         return cppMultiQuery.check(document);
     }
 
+    public boolean check(Reader reader) {
+        return cppMultiQuery.check(reader.cppReader.get());
+    }
+
     public String[] variables() {
         javacpp.StringVector cppVariables = cppMultiQuery.variables();
         String[] variables = new String[(int) cppVariables.size()];
@@ -42,8 +46,25 @@ public class MultiQuery {
         return null;
     }
 
+    public MultiMatch findOne(Reader reader) {
+        javacpp.OptionalMultiMatch match = cppMultiQuery.findone(reader.cppReader.get());
+        if (match.hasValue()) {
+            return new MultiMatch(match.value());
+        }
+        return null;
+    }
+
     public List<MultiMatch> findMany(String document, int limit) {
         javacpp.MultiMatchVector matches = cppMultiQuery.findmany(document, limit);
+        List<MultiMatch> results = new ArrayList<>();
+        for (int i = 0; i < matches.size(); i++) {
+            results.add(new MultiMatch(matches.at(i)));
+        }
+        return results;
+    }
+
+    public List<MultiMatch> findMany(Reader reader, int limit) {
+        javacpp.MultiMatchVector matches = cppMultiQuery.findmany(reader.cppReader.get(), limit);
         List<MultiMatch> results = new ArrayList<>();
         for (int i = 0; i < matches.size(); i++) {
             results.add(new MultiMatch(matches.at(i)));
@@ -60,8 +81,22 @@ public class MultiQuery {
         return results;
     }
 
+    public List<MultiMatch> findAll(Reader reader) {
+        javacpp.MultiMatchVector matches = cppMultiQuery.findall(reader.cppReader.get());
+        List<MultiMatch> results = new ArrayList<>();
+        for (int i = 0; i < matches.size(); i++) {
+            results.add(new MultiMatch(matches.at(i)));
+        }
+        return results;
+    }
+
     public MultiMatchGenerator findIter(String document) {
         javacpp.MultiMatchGenerator generator = cppMultiQuery.finditer(document);
+        return generator != null ? new MultiMatchGenerator(generator) : null;
+    }
+
+    public MultiMatchGenerator findIter(Reader reader) {
+        javacpp.MultiMatchGenerator generator = cppMultiQuery.finditer(reader.cppReader.get());
         return generator != null ? new MultiMatchGenerator(generator) : null;
     }
 }

@@ -1,6 +1,5 @@
 package rematch;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,8 @@ public class Query {
     private final javacpp.Query cppQuery;
 
     public Query(String pattern, Flags flags, int maxMempoolDuplications, int maxDeterministicStates, int bufferSize) {
-        this.cppQuery = new javacpp.Query(pattern, flags.getValue(), maxMempoolDuplications, maxDeterministicStates, bufferSize);
+        this.cppQuery = new javacpp.Query(pattern, flags.getValue(), maxMempoolDuplications, maxDeterministicStates,
+                bufferSize);
     }
 
     public Query(String pattern, Flags flags) {
@@ -24,6 +24,10 @@ public class Query {
         return cppQuery.check(document);
     }
 
+    public boolean check(Reader reader) {
+        return cppQuery.check(reader.cppReader.get());
+    }
+
     public String[] variables() {
         javacpp.StringVector cppVariables = this.cppQuery.variables();
         String[] variables = new String[(int) cppVariables.size()];
@@ -33,9 +37,16 @@ public class Query {
         return variables;
     }
 
-
     public Match findOne(String document) {
         javacpp.OptionalMatch match = cppQuery.findone(document);
+        if (match.hasValue()) {
+            return new Match(match.value());
+        }
+        return null;
+    }
+
+    public Match findOne(Reader reader) {
+        javacpp.OptionalMatch match = cppQuery.findone(reader.cppReader.get());
         if (match.hasValue()) {
             return new Match(match.value());
         }
@@ -51,8 +62,26 @@ public class Query {
         return result;
     }
 
+    public List<Match> findMany(Reader reader, int limit) {
+        javacpp.MatchVector cppMatches = cppQuery.findmany(reader.cppReader.get(), limit);
+        List<Match> result = new ArrayList<>();
+        for (int i = 0; i < cppMatches.size(); i++) {
+            result.add(new Match(cppMatches.at(i)));
+        }
+        return result;
+    }
+
     public List<Match> findAll(String document) {
         javacpp.MatchVector cppMatches = cppQuery.findall(document);
+        List<Match> result = new ArrayList<>();
+        for (int i = 0; i < cppMatches.size(); i++) {
+            result.add(new Match(cppMatches.at(i)));
+        }
+        return result;
+    }
+
+    public List<Match> findAll(Reader reader) {
+        javacpp.MatchVector cppMatches = cppQuery.findall(reader.cppReader.get());
         List<Match> result = new ArrayList<>();
         for (int i = 0; i < cppMatches.size(); i++) {
             result.add(new Match(cppMatches.at(i)));
