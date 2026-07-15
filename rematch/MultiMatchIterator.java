@@ -7,6 +7,8 @@ public class MultiMatchIterator implements Iterator<MultiMatch> {
     private final javacpp.MultiMatchIterator current;
     private final javacpp.MultiMatchIterator end;
 
+    private boolean needToIncrement = false;
+
     public MultiMatchIterator(javacpp.MultiMatchIterator begin, javacpp.MultiMatchIterator end) {
         this.current = begin;
         this.end = end;
@@ -14,13 +16,26 @@ public class MultiMatchIterator implements Iterator<MultiMatch> {
 
     @Override
     public boolean hasNext() {
+        if (needToIncrement) {
+            current.operator_increment();
+            needToIncrement = false;
+        }
         return !current.operatorEquals(end);
     }
 
     @Override
     public MultiMatch next() {
+        if (needToIncrement) {
+            current.operator_increment();
+            needToIncrement = false;
+        }
+
+        if (!hasNext()) {
+            throw new java.util.NoSuchElementException();
+        }
+
+        needToIncrement = true;
         javacpp.MultiMatch cppMatch = current.operator_star();
-        current.operator_increment();
         return new MultiMatch(cppMatch);
     }
 

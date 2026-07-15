@@ -2,10 +2,12 @@ package rematch;
 
 import java.util.Iterator;
 
-public class MatchIterator implements Iterator<Match> { // TODO: add Iterable
+public class MatchIterator implements Iterator<Match> {
 
     private final javacpp.MatchIterator current;
     private final javacpp.MatchIterator end;
+
+    private boolean needToIncrement = false;
 
     public MatchIterator(javacpp.MatchIterator begin, javacpp.MatchIterator end) {
         this.current = begin;
@@ -14,26 +16,38 @@ public class MatchIterator implements Iterator<Match> { // TODO: add Iterable
 
     @Override
     public boolean hasNext() {
-        return !current.operatorEquals(end); // operator==
+        if (needToIncrement) {
+            current.operator_increment();
+            needToIncrement = false;
+        }
+        return !current.operatorEquals(end);
     }
 
     @Override
     public Match next() {
-        javacpp.Match cppMatch = current.operator_star(); // equivalente a *it en C++
-        current.operator_increment(); // it++
+        if (needToIncrement) {
+            current.operator_increment();
+            needToIncrement = false;
+        }
+
+        if (!hasNext()) {
+            throw new java.util.NoSuchElementException();
+        }
+
+        needToIncrement = true;
+        javacpp.Match cppMatch = current.operator_star();
         return new Match(cppMatch);
     }
 
     public Match operatorStar() {
-        current.operator_star(); // equivalente a *it en C++
-        return new Match(current.operator_star()); // devuelve el valor actual
+        return new Match(current.operator_star());
     }
 
     public boolean operatorEquals(MatchIterator other) {
-        return current.operatorEquals(other.current); // operador==
+        return current.operatorEquals(other.current);
     }
 
     public boolean operatorNotEquals(MatchIterator other) {
-        return current.operatorNotEquals(other.current); // operador!=
+        return current.operatorNotEquals(other.current);
     }
 }

@@ -1,16 +1,16 @@
 import rematch.*;
 import java.io.IOException;
 
-public class TestJavaREmatch {
+public class TestJavaREmatchMulti {
 
     public static void testFindIter() {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         String document = "You don't know about me without you have read a book by the name of The Adventures of Tom Sawyer but that ain't no matter.";
 
-        Query query = new Query(pattern);
+        MultiQuery query = new MultiQuery(pattern);
 
-        for (Match m : query.findIter(document)) {
-            System.out.println(m + " - " + m.group(0));
+        for (MultiMatch m : query.findIter(document)) {
+            System.out.println(m + " - " + m.groups(0));
         }
     }
 
@@ -18,11 +18,11 @@ public class TestJavaREmatch {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         String document = "You don't know about me without you have read a book by the name of The Adventures of Tom Sawyer but that ain't no matter.";
 
-        Query query = new Query(pattern);
-        Match m = query.findOne(document);
+        MultiQuery query = new MultiQuery(pattern);
+        MultiMatch m = query.findOne(document);
 
         if (m != null) {
-            System.out.println(m + " - " + m.group(0));
+            System.out.println(m + " - " + m.groups(0));
         } else {
             System.out.println("NULL");
         }
@@ -32,7 +32,7 @@ public class TestJavaREmatch {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         String document = "You don't know about me without you have read a book by the name of The Adventures of Tom Sawyer but that ain't no matter.";
 
-        Query query = new Query(pattern);
+        MultiQuery query = new MultiQuery(pattern);
         boolean m = query.check(document);
 
         System.out.println(m);
@@ -42,10 +42,10 @@ public class TestJavaREmatch {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         Reader reader = new Reader("document.txt");
 
-        Query query = new Query(pattern);
+        MultiQuery query = new MultiQuery(pattern);
 
-        for (Match m : query.findIter(reader)) {
-            System.out.println(m + " - " + m.group(0));
+        for (MultiMatch m : query.findIter(reader)) {
+            System.out.println(m + " - " + m.groups(0));
         }
     }
 
@@ -53,17 +53,17 @@ public class TestJavaREmatch {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         Reader reader = new Reader("document.txt");
 
-        Query query = new Query(pattern);
-        Match m = query.findOne(reader);
+        MultiQuery query = new MultiQuery(pattern);
+        MultiMatch m = query.findOne(reader);
 
-        System.out.println(m + " - " + m.group(0));
+        System.out.println(m + " - " + m.groups(0));
     }
 
     public static void testCheckStream() {
         String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
         Reader reader = new Reader("document.txt");
 
-        Query query = new Query(pattern);
+        MultiQuery query = new MultiQuery(pattern);
         boolean m = query.check(reader);
 
         System.out.println(m);
