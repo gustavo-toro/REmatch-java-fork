@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" }, link = "REmatch")
+@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" }) // , link = "REmatch")
 @Namespace("REmatch")
 public class Match extends Pointer {
     static {

@@ -11,7 +11,7 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/span.hpp",
         "REmatch/match_generator.hpp",
         "<vector>", "string"
-}, link = { "REmatch" })
+}) //, link = { "REmatch" })
 @Namespace("REmatch::library_interface")
 public class Query extends Pointer {
     static {

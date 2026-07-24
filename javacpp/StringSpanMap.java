@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<map>", "<string>", "REmatch/span.hpp" }, link = "REmatch")
+@Platform(include = { "<map>", "<string>", "REmatch/span.hpp" }) //, link = "REmatch")
 @Name("std::map<std::string, Span>")
 public class StringSpanMap extends Pointer {
     static {

@@ -15,11 +15,49 @@ public class NativeLoader {
 
         // Copia desde el .jar al archivo temporal
         try (InputStream is = NativeLoader.class.getResourceAsStream(pathInJar)) {
-            if (is == null) throw new FileNotFoundException("No se encontró " + pathInJar + " en el JAR");
+            if (is == null)
+                throw new FileNotFoundException("No se encontró " + pathInJar + " en el JAR");
             Files.copy(is, temp, StandardCopyOption.REPLACE_EXISTING);
         }
 
         // Carga desde la ruta temporal
         System.load(temp.toAbsolutePath().toString());
+    }
+
+    public static Path extractLibrary(String resource) throws IOException {
+        String fileName = Paths.get(resource).getFileName().toString();
+
+        Path temp = Files.createTempFile(
+                fileName.replace(".dll", ""),
+                ".dll");
+        temp.toFile().deleteOnExit();
+
+        try (InputStream in = NativeLoader.class.getResourceAsStream(resource)) {
+            if (in == null) {
+                throw new FileNotFoundException(resource);
+            }
+            Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return temp;
+    }
+
+    public static Path extractTo(String resource, Path target) throws IOException {
+        Files.createDirectories(target.getParent());
+
+        try (InputStream in = NativeLoader.class.getResourceAsStream(resource)) {
+            if (in == null) {
+                throw new FileNotFoundException(
+                        "Could not find " + resource + " in JAR");
+            }
+
+            Files.copy(
+                    in,
+                    target,
+                    StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        // target.toFile().deleteOnExit();
+        return target;
     }
 }

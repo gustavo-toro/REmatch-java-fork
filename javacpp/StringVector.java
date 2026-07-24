@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<vector>", "<string>" }, link = { "REmatch", "stdc++" })
+@Platform(include = { "<vector>", "<string>" }) //, link = { "REmatch", "stdc++" })
 @Name("std::vector<std::string>")
 public class StringVector extends Pointer {
     static {

@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/match.hpp" }, link = { "REmatch" })
+@Platform(include = { "REmatch/match.hpp" }) //, link = { "REmatch" })
 @Name("std::optional<REmatch::Match>")
 public class OptionalMatch extends Pointer {
     static {

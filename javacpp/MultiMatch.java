@@ -6,7 +6,7 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/multi_match.hpp",
         "REmatch/span.hpp"
-}, link = "REmatch")
+}) //, link = "REmatch")
 @Namespace("REmatch")
 public class MultiMatch extends Pointer {
     static {

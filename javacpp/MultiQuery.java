@@ -10,7 +10,7 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/span.hpp",
         "REmatch/multi_match_generator.hpp",
         "<vector>", "string"
-}, link = { "REmatch", "stdc++" })
+}) //, link = { "REmatch", "stdc++" })
 @Namespace("REmatch")
 public class MultiQuery extends Pointer {
     static {

@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<vector>", "REmatch/match.hpp" }, link = { "REmatch", "stdc++" })
+@Platform(include = { "<vector>", "REmatch/match.hpp" }) //, link = { "REmatch", "stdc++" })
 @Namespace("std")
 @Name("vector<REmatch::Match>")
 public class MatchVector extends Pointer {

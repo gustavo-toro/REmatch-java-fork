@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<vector>", "REmatch/span.hpp" }, link = { "REmatch", "stdc++" })
+@Platform(include = { "<vector>", "REmatch/span.hpp" }) //, link = { "REmatch", "stdc++" })
 @Namespace("std")
 @Name("vector<std::pair<int64_t, int64_t>>")
 public class SpanVector extends Pointer {

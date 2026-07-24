@@ -6,7 +6,7 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/match.hpp",
         "REmatch/match_generator.hpp"
-}, link = "REmatch")
+}) //, link = "REmatch")
 @Namespace("REmatch")
 @Name("Iterator")
 public class MatchIterator extends Pointer {

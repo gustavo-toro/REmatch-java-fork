@@ -56,7 +56,11 @@ public class TestJavaREmatch {
         Query query = new Query(pattern);
         Match m = query.findOne(reader);
 
-        System.out.println(m + " - " + m.group(0));
+        if (m != null) {
+            System.out.println(m + " - " + m.group(0));
+        } else {
+            System.out.println("NULL");
+        }
     }
 
     public static void testCheckStream() {

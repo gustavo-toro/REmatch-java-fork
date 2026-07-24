@@ -8,7 +8,7 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/multi_query.hpp",
         "REmatch/constants.hpp",
         "REmatch/multi_match_generator.hpp"
-}, link = { "REmatch", "stdc++" })
+}) //, link = { "REmatch", "stdc++" })
 @Namespace("REmatch")
 public class MultiMatchGenerator extends Pointer {
     static {

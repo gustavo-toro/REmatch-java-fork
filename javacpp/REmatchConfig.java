@@ -7,6 +7,7 @@ import org.bytedeco.javacpp.tools.*;
 @Properties(
     value = {
         @Platform(
+            includepath = "C:/Program Files (x86)/REmatch/include", // TODO:
             include = {
                 "REmatch/REmatch.hpp",
                 "REmatch/span.hpp",
@@ -23,9 +24,12 @@ import org.bytedeco.javacpp.tools.*;
                 "REmatch/multi_query.hpp",
                 "REmatch/query.hpp"
             },
-            includepath = "C:/Program Files (x86)/REmatch/include",
-            link = "REmatch",
-            compiler = "cpp17"
+
+            preloadpath = "C:/Program Files (x86)/REmatch/lib", // TODO:
+            preload = "REmatch",
+
+            linkpath = "C:/Program Files (x86)/REmatch/bin", // TODO:
+            link = "REmatch"
         )
     }
 )

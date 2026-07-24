@@ -3,7 +3,7 @@ package javacpp;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = "REmatch/flags.hpp", link = "REmatch")
+@Platform(include = "REmatch/flags.hpp") //, link = "REmatch")
 @Namespace("REmatch::library_interface")
 public class Flags extends Pointer {
     static {
