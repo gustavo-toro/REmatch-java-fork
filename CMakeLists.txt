@@ -6,18 +6,12 @@ find_package(Java REQUIRED)
 message(STATUS "javac path: ${Java_JAVAC_EXECUTABLE}")
 message(STATUS "java path:  ${Java_JAVA_EXECUTABLE}")
 
-
 option(BUILD_JAR_LIBRARY "Build the rematch.jar Java library" ON)
-
-
-
-
 
 set(OUT_DIR ${CMAKE_BINARY_DIR}/bin)
 set(MAIN_CLASS ${CMAKE_SOURCE_DIR}/rematch/Main.java)
 set(JAVACPP_JAR ${CMAKE_SOURCE_DIR}/javacpp/libs/javacpp.jar)
 
-# Recolecta todos los archivos Java
 file(GLOB_RECURSE JAVACPP_SOURCES
     "${CMAKE_SOURCE_DIR}/javacpp/*.java"
 )
@@ -26,14 +20,10 @@ file(GLOB JAVA_SOURCES
     "${CMAKE_SOURCE_DIR}/rematch/*.java"
 )
 
-
-
-
 # 1. Incluye las rutas de encabezados necesarias para encontrar archivos .hpp
 find_package(REmatch REQUIRED)
 
-get_target_property(
-    REMATCH_INCLUDES
+get_target_property(REMATCH_INCLUDES
     REmatch::REmatch
     INTERFACE_INCLUDE_DIRECTORIES
 )
@@ -42,8 +32,6 @@ get_target_property(REMATCH_DLL
     REmatch::REmatch
     IMPORTED_LOCATION_RELEASE
 )
-
-message("REmatch DLL: ${REMATCH_DLL}")
 
 # 2. Definir nombre JNI
 set(JNI_WRAPPER_LIBRARY jniREmatch)
@@ -56,7 +44,7 @@ add_custom_command(
     OUTPUT ${JAVA_CLASSES_STAMP}
     COMMAND javac 
             -cp ${JAVACPP_JAR}
-            -d ${CMAKE_BINARY_DIR}/classes     
+            -d ${CMAKE_BINARY_DIR}/classes
             ${JAVACPP_SOURCES}
     COMMAND ${CMAKE_COMMAND} -E touch ${JAVA_CLASSES_STAMP}
     DEPENDS ${JAVACPP_SOURCES}
@@ -73,17 +61,26 @@ else()
 endif()
 
 # 5. Generar JNI .so solo si aun no existe
+set(JAVA_OPTS
+    -cp "${CMAKE_BINARY_DIR}/classes"
+    -d "${CMAKE_BINARY_DIR}/jni"
+    -o ${JNI_WRAPPER_LIBRARY}
+)
+
+if(MSVC)
+    list(APPEND JAVA_OPTS
+        "-Dplatform.includepath=${REMATCH_INCLUDES}"
+        "-Dplatform.linkpath=C:/Program Files (x86)/REmatch/lib" # TODO:
+        -Xcompiler "/std:c++17"
+        -Xcompiler "/MT"
+    )
+endif()
+
 add_custom_command(
     OUTPUT ${JNI_OUTPUT_FILE}
     COMMAND java
             -jar ${JAVACPP_JAR}
-            "-Dplatform.includepath=${REMATCH_INCLUDES}"
-            "-Dplatform.linkpath=C:/Program Files (x86)/REmatch/lib"
-            -Xcompiler "/std:c++17"
-            -Xcompiler "/MT"
-            -cp "${CMAKE_BINARY_DIR}/classes"
-            -d "${CMAKE_BINARY_DIR}/jni"
-            -o ${JNI_WRAPPER_LIBRARY}
+            ${JAVA_OPTS}
             javacpp.REmatchConfig
             javacpp.REmatch
             javacpp.Flags
@@ -117,29 +114,31 @@ add_custom_target(GenerateJNIWrapper ALL
     DEPENDS ${JNI_OUTPUT_FILE}
 )
 
-
-
-
+if(MSVC)
+    set(PATH_SEP ";")
+else()
+    set(PATH_SEP ":")
+endif()
 
 # 7. Compilar JavaREmatch
 add_custom_command(
     OUTPUT ${OUT_DIR}
     COMMAND ${Java_JAVAC_EXECUTABLE}
-            -cp "${CMAKE_SOURCE_DIR};${JAVACPP_JAR}" # TODO: separator
+            -cp "${CMAKE_SOURCE_DIR}${PATH_SEP}${JAVACPP_JAR}"
             -d ${OUT_DIR}
             ${JAVA_SOURCES}
     DEPENDS ${JAVA_SOURCES}
     COMMENT "Compiling Java files..."
 )
 
-add_custom_target(CompileJava2 ALL 
+add_custom_target(CompileJava2 ALL
     DEPENDS ${OUT_DIR}
 )
 
 # 8. Ejecutar Main
 add_custom_target(RunJavaClass2 ALL
     COMMAND ${Java_JAVA_EXECUTABLE}
-            -cp "${OUT_DIR}:${JAVACPP_JAR}"
+            -cp "${OUT_DIR}${PATH_SEP}${JAVACPP_JAR}"
             -Djava.library.path=${CMAKE_SOURCE_DIR}/build/jni  # donde buscar la librería libjniREmatch.so 
             ${MAIN_CLASS}
     DEPENDS CompileJava2 GenerateJNIWrapper
@@ -160,14 +159,23 @@ if(BUILD_JAR_LIBRARY)
         "Main-Class: rematch.Main\n"
     )
 
-    add_custom_command(
-        OUTPUT ${JAR_OUTPUT_FILE}
+    set(JAR_PACKING_COMMANDS
         COMMAND ${CMAKE_COMMAND} -E make_directory ${JAR_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OUT_DIR} ${JAR_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy ${JNI_OUTPUT_FILE} ${JAR_BUILD_DIR}/${JNI_LIBRARY_W_EXTENSION}
-        COMMAND ${CMAKE_COMMAND} -E copy ${REMATCH_DLL} ${JAR_BUILD_DIR}/
         COMMAND ${CMAKE_COMMAND} -E make_directory ${JAR_BUILD_DIR}/META-INF
         COMMAND ${CMAKE_COMMAND} -E copy ${MANIFEST_FILE} ${JAR_BUILD_DIR}/META-INF/MANIFEST.MF
+        )
+
+        if(MSVC)
+            list(APPEND JAR_PACKING_COMMANDS
+                COMMAND ${CMAKE_COMMAND} -E copy ${REMATCH_DLL} ${JAR_BUILD_DIR}/
+        )
+    endif()
+
+    add_custom_command(
+        OUTPUT ${JAR_OUTPUT_FILE}
+        ${JAR_PACKING_COMMANDS}
         COMMAND jar cfm ${JAR_OUTPUT_FILE} ${JAR_BUILD_DIR}/META-INF/MANIFEST.MF -C ${JAR_BUILD_DIR} .
         COMMENT "Empaquetando rematch.jar con clases + .so"
         DEPENDS RunJavaClass2

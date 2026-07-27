@@ -29,9 +29,6 @@ public class MultiMatchIterator extends Pointer {
     @Name("operator++")
     public native @ByRef MultiMatchIterator operator_increment();
 
-    // @Name("operator++") TODO:
-    // public native void operator_increment_postfix();
-
     @Name("operator==")
     public native boolean operatorEquals(@ByRef MultiMatchIterator other);
 

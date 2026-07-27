@@ -31,9 +31,6 @@ public class MultiMatch extends Pointer {
 
     public native @ByVal StringVector variables();
 
-    // @Name("operator==") TODO:
-    // public native boolean operatorEquals(@ByRef MultiMatch other);
-
     public native @StdString String to_string();
 
     public static void main(String[] args) {

@@ -14,12 +14,6 @@ public class MatchIterator extends Pointer {
         JNILoader.load("jniREmatch");
     }
 
-    // public MatchIterator() {
-    //     allocate();
-    // }
-
-    // private native void allocate();
-
     @Name("operator*")
     public native @ByRef Match operator_star();
 
@@ -28,9 +22,6 @@ public class MatchIterator extends Pointer {
 
     @Name("operator++")
     public native @ByRef MatchIterator operator_increment();
-
-    // @Name("operator++") TODO: not sure about this
-    // public native void operator_increment_postfix();
 
     // Comparación de igualdad (==)
     @Name("operator==")

@@ -24,24 +24,6 @@ public class NativeLoader {
         System.load(temp.toAbsolutePath().toString());
     }
 
-    public static Path extractLibrary(String resource) throws IOException {
-        String fileName = Paths.get(resource).getFileName().toString();
-
-        Path temp = Files.createTempFile(
-                fileName.replace(".dll", ""),
-                ".dll");
-        temp.toFile().deleteOnExit();
-
-        try (InputStream in = NativeLoader.class.getResourceAsStream(resource)) {
-            if (in == null) {
-                throw new FileNotFoundException(resource);
-            }
-            Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        return temp;
-    }
-
     public static Path extractTo(String resource, Path target) throws IOException {
         Files.createDirectories(target.getParent());
 
