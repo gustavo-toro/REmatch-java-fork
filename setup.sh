@@ -14,3 +14,5 @@ mkdir -p javacpp/libs
 cp javacpp-platform-1.5.13-bin/javacpp-linux-x86_64.jar javacpp/libs
 cp javacpp-platform-1.5.13-bin/javacpp-platform.jar javacpp/libs
 cp javacpp-platform-1.5.13-bin/javacpp.jar javacpp/libs
+
+rm -r javacpp-platform-1.5.13-bin
