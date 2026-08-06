@@ -1,35 +1,129 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
 
+  <name>REmatch</name>
+  <description>The REmatch library for Java: A novel regex engine for finding all matches over
+    documents.</description>
+  <url>https://rematch.cl/</url>
+
   <groupId>cl.rematch</groupId>
   <artifactId>rematch</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/license/mit</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Vicente Calisto</name>
+    </developer>
+    <developer>
+      <name>Patricia Silva</name>
+    </developer>
+    <developer>
+      <name>Gustavo Toro</name>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/REmatchChile/REmatch-java.git</connection>
+    <developerConnection>scm:git:ssh://github.com:REmatchChile/REmatch-java.git</developerConnection>
+    <url>https://github.com/REmatchChile/REmatch-java</url>
+  </scm>
+
+  <prerequisites>
+    <maven>3.9.9</maven>
+  </prerequisites>
 
   <properties>
-      <maven.compiler.source>17</maven.compiler.source>
-      <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
-
-  <dependencies>
-    <dependency>
-        <groupId>org.bytedeco</groupId>
-        <artifactId>javacpp</artifactId>
-        <version>1.5.13</version>
-    </dependency>
-  </dependencies>
 
   <build>
     <resources>
-        <resource>
-            <directory>${project.basedir}/build/jni</directory>
-            <includes>
-                <include>libjniREmatch.so</include>
-            </includes>
-        </resource>
-
-        <resource>
-            <directory>src/main/resources</directory>
-        </resource>
+      <resource>
+        <directory>${project.basedir}/build/jni</directory>
+        <includes>
+          <include>libjniREmatch.so</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
     </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.2.8</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.12.0</version>
+        <configuration></configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>6.0.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.13</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>6.1.2</version>
+    </dependency>
+  </dependencies>
 </project>

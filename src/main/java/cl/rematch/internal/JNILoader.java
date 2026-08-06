@@ -1,15 +1,10 @@
 package cl.rematch.internal;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 import org.bytedeco.javacpp.*;
-import org.bytedeco.javacpp.annotation.*;
 
 public class JNILoader {
 
@@ -23,7 +18,7 @@ public class JNILoader {
                 loadLinuxLibs(libName);
             }
         } catch (Exception io) {
-            throw new RuntimeException("No se pudo cargar " + libName, io);
+            throw new RuntimeException("The library " + libName + " could not be loaded.", io);
         }
     }
 

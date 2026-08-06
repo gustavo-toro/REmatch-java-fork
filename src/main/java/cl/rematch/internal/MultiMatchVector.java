@@ -3,7 +3,7 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<vector>", "REmatch/multi_match.hpp" }) //, link = { "REmatch", "stdc++" })
+@Platform(include = { "<vector>", "REmatch/multi_match.hpp" })
 @Namespace("std")
 @Name("vector<REmatch::MultiMatch>")
 public class MultiMatchVector extends Pointer {
@@ -22,13 +22,4 @@ public class MultiMatchVector extends Pointer {
     public native @ByVal MultiMatch at(@Cast("size_t") long index);
 
     public native void push_back(@ByVal MultiMatch value);
-
-    public static void main(String[] args) {
-
-        System.out.println("Testing MultiMatchVector...");
-
-        MultiMatchVector vector = new MultiMatchVector();
-        System.out.println("Vector size: " + vector.size());
-
-    }
 }

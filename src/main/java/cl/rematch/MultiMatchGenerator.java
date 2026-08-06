@@ -1,8 +1,9 @@
 package cl.rematch;
 
-
-import java.util.Iterator;
-
+/**
+ * MultiMatchGenerator is the output of findIter for multi spans. It allows a
+ * user to iterate over multi matches using a for loop.
+ */
 public class MultiMatchGenerator implements Iterable<MultiMatch> {
     private final cl.rematch.internal.MultiMatchGenerator generator;
 

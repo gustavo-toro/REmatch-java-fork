@@ -3,7 +3,7 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = "REmatch/flags.hpp") //, link = "REmatch")
+@Platform(include = "REmatch/flags.hpp")
 @Namespace("REmatch::library_interface")
 public class Flags extends Pointer {
     static {
@@ -37,13 +37,4 @@ public class Flags extends Pointer {
     }
 
     private native void allocate();
-
-    public static void main(String[] args) {
-        Flags flags = new Flags();
-
-        // Usa las constantes
-        System.out.println("NONE: " + Flags.NONE);
-        System.out.println("LINE_BY_LINE: " + Flags.LINE_BY_LINE);
-        System.out.println("Flags: " + flags.getVal());
-    }
 }

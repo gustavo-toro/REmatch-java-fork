@@ -1,5 +1,9 @@
 package cl.rematch;
 
+/**
+ * MatchGenerator is the output of findIter. It allows a user to iterate over
+ * matches using a for loop.
+ */
 public class MatchGenerator implements Iterable<Match> {
     private final cl.rematch.internal.MatchGenerator generator;
 

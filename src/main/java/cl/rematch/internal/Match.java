@@ -3,7 +3,7 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" }) // , link = "REmatch")
+@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" })
 @Namespace("REmatch")
 public class Match extends Pointer {
     static {
@@ -37,15 +37,4 @@ public class Match extends Pointer {
     public native boolean empty();
 
     public native @StdString String to_string();
-
-    public static void main(String[] args) {
-        try {
-
-            // Prueba los métodos básicos
-            System.out.println("Testing Match methods...");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

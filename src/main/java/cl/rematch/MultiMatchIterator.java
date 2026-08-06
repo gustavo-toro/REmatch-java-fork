@@ -2,6 +2,9 @@ package cl.rematch;
 
 import java.util.Iterator;
 
+/**
+ * MatchIterator is a forward iterator of multi matches.
+ */
 public class MultiMatchIterator implements Iterator<MultiMatch> {
 
     private final cl.rematch.internal.MultiMatchIterator current;
@@ -9,7 +12,8 @@ public class MultiMatchIterator implements Iterator<MultiMatch> {
 
     private boolean needToIncrement = false;
 
-    public MultiMatchIterator(cl.rematch.internal.MultiMatchIterator begin, cl.rematch.internal.MultiMatchIterator end) {
+    public MultiMatchIterator(cl.rematch.internal.MultiMatchIterator begin,
+            cl.rematch.internal.MultiMatchIterator end) {
         this.current = begin;
         this.end = end;
     }

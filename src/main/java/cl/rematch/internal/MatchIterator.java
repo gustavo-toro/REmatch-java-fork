@@ -6,7 +6,7 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/match.hpp",
         "REmatch/match_generator.hpp"
-}) //, link = "REmatch")
+})
 @Namespace("REmatch")
 @Name("Iterator")
 public class MatchIterator extends Pointer {
@@ -23,19 +23,9 @@ public class MatchIterator extends Pointer {
     @Name("operator++")
     public native @ByRef MatchIterator operator_increment();
 
-    // Comparación de igualdad (==)
     @Name("operator==")
     public native boolean operatorEquals(@ByRef MatchIterator other);
 
-    // Comparación de desigualdad (!=)
     @Name("operator!=")
     public native boolean operatorNotEquals(@ByRef MatchIterator other);
-
-    public static void main(String[] args) {
-        try {
-            MatchIterator it = new MatchIterator();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

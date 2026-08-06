@@ -6,7 +6,7 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/multi_match.hpp",
         "REmatch/span.hpp"
-}) //, link = "REmatch")
+})
 @Namespace("REmatch")
 public class MultiMatch extends Pointer {
     static {
@@ -32,12 +32,4 @@ public class MultiMatch extends Pointer {
     public native @ByVal StringVector variables();
 
     public native @StdString String to_string();
-
-    public static void main(String[] args) {
-        try {
-            System.out.println("Testing MultiMatch methods...");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

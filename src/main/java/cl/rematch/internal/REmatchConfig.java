@@ -3,10 +3,11 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.annotation.*;
 import org.bytedeco.javacpp.tools.*;
 
+// TODO: fix paths and check if @Platform can be removed from other classes
 @Properties(
     value = {
         @Platform(
-            includepath = "C:/Program Files (x86)/REmatch/include", // TODO:
+            includepath = "C:/Program Files (x86)/REmatch/include",
             include = {
                 "REmatch/REmatch.hpp",
                 "REmatch/span.hpp",
@@ -24,10 +25,10 @@ import org.bytedeco.javacpp.tools.*;
                 "REmatch/query.hpp"
             },
 
-            preloadpath = "C:/Program Files (x86)/REmatch/lib", // TODO:
+            preloadpath = "C:/Program Files (x86)/REmatch/lib",
             preload = "REmatch",
 
-            linkpath = "C:/Program Files (x86)/REmatch/bin", // TODO:
+            linkpath = "C:/Program Files (x86)/REmatch/bin",
             link = "REmatch"
         )
     }

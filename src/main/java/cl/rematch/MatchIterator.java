@@ -2,6 +2,9 @@ package cl.rematch;
 
 import java.util.Iterator;
 
+/**
+ * MatchIterator is a forward iterator of matches.
+ */
 public class MatchIterator implements Iterator<Match> {
 
     private final cl.rematch.internal.MatchIterator current;

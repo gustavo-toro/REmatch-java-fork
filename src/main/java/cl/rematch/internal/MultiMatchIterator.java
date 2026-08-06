@@ -6,19 +6,13 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/multi_match.hpp",
         "REmatch/multi_match_generator.hpp"
-}) //, link = "REmatch")
+})
 @Namespace("REmatch")
 @Name("MultiIterator")
 public class MultiMatchIterator extends Pointer {
     static {
         JNILoader.load("jniREmatch");
     }
-
-    // public MultiMatchIterator() {
-    //     allocate();
-    // }
-
-    // private native void allocate();
 
     @Name("operator*")
     public native @ByRef MultiMatch operator_star();
@@ -34,12 +28,4 @@ public class MultiMatchIterator extends Pointer {
 
     @Name("operator!=")
     public native boolean operatorNotEquals(@ByRef MultiMatchIterator other);
-
-    public static void main(String[] args) {
-        try {
-            MultiMatchIterator it = new MultiMatchIterator();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

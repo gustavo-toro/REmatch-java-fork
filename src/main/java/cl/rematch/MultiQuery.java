@@ -14,11 +14,13 @@ public class MultiQuery {
     }
 
     public MultiQuery(String pattern) {
-        this(pattern, Flags.none(), 8, 2000, 1024); // TODO:
+        this(pattern, Flags.none(), Constants.MAX_MEMPOOL_DUPLICATIONS, Constants.MAX_MEMPOOL_DUPLICATIONS,
+                Constants.BUFFER_SIZE);
     }
 
     public MultiQuery(String pattern, Flags flags) {
-        this(pattern, flags, 8, 2000, 1024); // TODO:
+        this(pattern, flags, Constants.MAX_MEMPOOL_DUPLICATIONS, Constants.MAX_DETERMINISTIC_STATES,
+                Constants.BUFFER_SIZE);
     }
 
     public boolean check(String document) {
