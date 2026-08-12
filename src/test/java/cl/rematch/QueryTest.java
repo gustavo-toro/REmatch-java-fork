@@ -12,6 +12,9 @@ record ExpectedMatch(int x, int y) {
 }
 
 public class QueryTest {
+
+    private static final String RESOURCES_PATH = "src/test/resources/";
+
     @Test
     void testCheck() {
 
@@ -50,7 +53,19 @@ public class QueryTest {
 
     @Test
     void testFindIter2() {
+        String pattern = "(^| )!word{(\\w|[\\-'])+}([ ,.])";
+        String document_path = RESOURCES_PATH + "document.txt";
+        Reader reader = new Reader(document_path);
 
+        Query query = new Query(pattern);
+
+        List<Match> actual = new ArrayList<>();
+
+        for (Match m : query.findIter(reader)) {
+            actual.add(m);
+        }
+
+        assertEquals(5, actual.size());
     }
 
     @Test

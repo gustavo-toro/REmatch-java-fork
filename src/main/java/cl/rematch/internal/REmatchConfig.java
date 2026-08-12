@@ -22,7 +22,8 @@ import org.bytedeco.javacpp.tools.*;
                 "REmatch/multi_match.hpp",
                 "REmatch/multi_match_generator.hpp",
                 "REmatch/multi_query.hpp",
-                "REmatch/query.hpp"
+                "REmatch/query.hpp",
+                "reader_wrapper_java.hpp"
             },
 
             preloadpath = "C:/Program Files (x86)/REmatch/lib",

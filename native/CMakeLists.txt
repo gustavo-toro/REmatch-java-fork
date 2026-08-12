@@ -2,15 +2,27 @@ cmake_minimum_required(VERSION 3.10)
 project(JavaREmatch)
 
 find_package(Java REQUIRED)
+include(UseJava)
 
 message(STATUS "javac path: ${Java_JAVAC_EXECUTABLE}")
 message(STATUS "java path:  ${Java_JAVA_EXECUTABLE}")
 
+set(JAVACPP_VERSION "1.5.13" CACHE STRING "JavaCPP version")
+
+if(WIN32)
+    set(MAVEN_REPO "$ENV{USERPROFILE}/.m2/repository")
+else()
+    set(MAVEN_REPO "$ENV{HOME}/.m2/repository")
+endif()
+
+find_jar(
+    JAVACPP_JAR
+    NAMES "javacpp-${JAVACPP_VERSION}"
+    PATHS "${MAVEN_REPO}/org/bytedeco/javacpp"
+    PATH_SUFFIXES "${JAVACPP_VERSION}"
+)
+
 set(OUT_DIR ${CMAKE_BINARY_DIR}/bin)
-set(MAIN_CLASS ${CMAKE_SOURCE_DIR}/rematch/Main.java)
-set(JAVACPP_JAR ${CMAKE_SOURCE_DIR}/javacpp/libs/javacpp.jar)
-
-
 
 file(GLOB_RECURSE JAVACPP_SOURCES
     "${CMAKE_SOURCE_DIR}/../src/main/java/cl/rematch/internal/*.java"
@@ -65,6 +77,7 @@ endif()
 set(JAVA_OPTS
     -cp "${CMAKE_BINARY_DIR}/classes"
     -d "${CMAKE_BINARY_DIR}/jni"
+    "-Dplatform.includepath=${CMAKE_SOURCE_DIR}/../native" # TODO:
     -o ${JNI_WRAPPER_LIBRARY}
 )
 
@@ -79,12 +92,10 @@ endif()
 
 add_custom_command(
     OUTPUT ${JNI_OUTPUT_FILE}
-    COMMAND java
-            # -jar ${JAVACPP_JAR}
-            -jar "/home/gustavo/.m2/repository/org/bytedeco/javacpp/1.5.13/javacpp-1.5.13.jar" # TODO:
+    COMMAND ${Java_JAVA_EXECUTABLE}
+            -jar ${JAVACPP_JAR}
             ${JAVA_OPTS}
             cl.rematch.internal.REmatchConfig
-            cl.rematch.internal.REmatch
             cl.rematch.internal.Flags
             cl.rematch.internal.Query
             cl.rematch.internal.Match
@@ -107,8 +118,9 @@ add_custom_command(
             cl.rematch.internal.Reader
             cl.rematch.internal.ReaderWrapper
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/classes"
-    COMMENT "Generando un solo JNI wrapper con javacpp"
-    DEPENDS ${JAVA_CLASSES_STAMP}
+    DEPENDS
+        ${JAVA_CLASSES_STAMP}
+        ${CMAKE_CURRENT_SOURCE_DIR}/reader_wrapper_java.hpp
 )
 
 # 6. Crea un target para el JNI .so

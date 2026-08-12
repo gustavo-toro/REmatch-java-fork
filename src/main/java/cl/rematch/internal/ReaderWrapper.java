@@ -3,8 +3,10 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/reader_wrapper_java.hpp" })
-@Namespace("REmatch")
+@Platform(include = {
+        "REmatch/fstream_reader.hpp",
+        "reader_wrapper_java.hpp",
+})
 @Name("ReaderWrapperJava")
 public class ReaderWrapper extends Pointer {
     static {
