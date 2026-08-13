@@ -11,11 +11,12 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/span.hpp",
         "REmatch/match_generator.hpp",
         "<vector>", "string"
-})
+
+}, library = "jniREmatch")
 @Namespace("REmatch::library_interface")
 public class Query extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public Query(@Const @ByRef @StdString String pattern, @Cast("REmatch::library_interface::Flags") int flags,

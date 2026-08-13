@@ -8,11 +8,11 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/query.hpp",
         "REmatch/constants.hpp",
         "REmatch/match_generator.hpp"
-})
+}, library = "jniREmatch")
 @Namespace("REmatch")
 public class MatchGenerator extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public MatchGenerator(Pointer p) {

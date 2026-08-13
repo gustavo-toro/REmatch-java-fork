@@ -55,8 +55,7 @@ set(JAVA_CLASSES_STAMP "${CMAKE_BINARY_DIR}/compiled.stamp")
 add_custom_command(
     OUTPUT ${JAVA_CLASSES_STAMP}
     COMMAND javac 
-            # -cp ${JAVACPP_JAR}
-            -cp "/home/gustavo/.m2/repository/org/bytedeco/javacpp/1.5.13/javacpp-1.5.13.jar"
+            -cp ${JAVACPP_JAR}
             -d ${CMAKE_BINARY_DIR}/classes
             ${JAVACPP_SOURCES}
     COMMAND ${CMAKE_COMMAND} -E touch ${JAVA_CLASSES_STAMP}
@@ -76,7 +75,6 @@ endif()
 # 5. Generar JNI .so solo si aun no existe
 set(JAVA_OPTS
     -cp "${CMAKE_BINARY_DIR}/classes"
-    -d "${CMAKE_BINARY_DIR}/jni"
     "-Dplatform.includepath=${CMAKE_SOURCE_DIR}/../native" # TODO:
     -o ${JNI_WRAPPER_LIBRARY}
 )
@@ -117,7 +115,6 @@ add_custom_command(
             cl.rematch.internal.NativeLoader
             cl.rematch.internal.Reader
             cl.rematch.internal.ReaderWrapper
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/classes"
     DEPENDS
         ${JAVA_CLASSES_STAMP}
         ${CMAKE_CURRENT_SOURCE_DIR}/reader_wrapper_java.hpp

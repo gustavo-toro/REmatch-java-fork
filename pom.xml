@@ -49,9 +49,9 @@
   <build>
     <resources>
       <resource>
-        <directory>${project.basedir}/build/jni</directory>
+        <directory>${project.basedir}/build/classes</directory>
         <includes>
-          <include>libjniREmatch.so</include>
+          <include>cl/rematch/internal/linux-x86_64/libjniREmatch.so</include>
         </includes>
       </resource>
       <resource>

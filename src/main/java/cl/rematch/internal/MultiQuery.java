@@ -10,11 +10,11 @@ import org.bytedeco.javacpp.annotation.*;
         "REmatch/span.hpp",
         "REmatch/multi_match_generator.hpp",
         "<vector>", "string"
-})
+}, library = "jniREmatch")
 @Namespace("REmatch")
 public class MultiQuery extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public MultiQuery(@Const @ByRef @StdString String pattern, @Cast("REmatch::library_interface::Flags") int flags,

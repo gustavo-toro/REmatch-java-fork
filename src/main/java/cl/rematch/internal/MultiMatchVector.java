@@ -3,12 +3,12 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<vector>", "REmatch/multi_match.hpp" })
+@Platform(include = { "<vector>", "REmatch/multi_match.hpp" }, library = "jniREmatch")
 @Namespace("std")
 @Name("vector<REmatch::MultiMatch>")
 public class MultiMatchVector extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public MultiMatchVector() {

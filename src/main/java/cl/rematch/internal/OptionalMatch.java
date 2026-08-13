@@ -3,11 +3,11 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/match.hpp" })
+@Platform(include = { "REmatch/match.hpp", "<optional>" }, library = "jniREmatch")
 @Name("std::optional<REmatch::Match>")
 public class OptionalMatch extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     @Name("has_value")

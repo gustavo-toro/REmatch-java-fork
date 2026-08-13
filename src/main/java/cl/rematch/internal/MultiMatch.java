@@ -6,11 +6,11 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/multi_match.hpp",
         "REmatch/span.hpp"
-})
+}, library = "jniREmatch")
 @Namespace("REmatch")
 public class MultiMatch extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public MultiMatch(Pointer p) {

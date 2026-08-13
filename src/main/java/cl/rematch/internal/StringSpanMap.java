@@ -3,11 +3,11 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "<map>", "<string>", "REmatch/span.hpp" })
+@Platform(include = { "<map>", "<string>", "REmatch/span.hpp" }, library = "jniREmatch")
 @Name("std::map<std::string, Span>")
 public class StringSpanMap extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public StringSpanMap() {

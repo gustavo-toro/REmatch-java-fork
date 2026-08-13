@@ -30,7 +30,8 @@ import org.bytedeco.javacpp.tools.*;
             preload = "REmatch",
 
             linkpath = "C:/Program Files (x86)/REmatch/bin",
-            link = "REmatch"
+            link = "REmatch",
+            library = "jniREmatch"
         )
     }
 )

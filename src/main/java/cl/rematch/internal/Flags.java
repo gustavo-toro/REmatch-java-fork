@@ -3,11 +3,11 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = "REmatch/flags.hpp")
+@Platform(include = "REmatch/flags.hpp", library = "jniREmatch")
 @Namespace("REmatch::library_interface")
 public class Flags extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public static final int NONE = 0;

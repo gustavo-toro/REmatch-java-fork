@@ -3,12 +3,12 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/span.hpp" })
+@Platform(include = { "REmatch/span.hpp" }, library = "jniREmatch")
 @Name("std::pair<int64_t, int64_t>")
 @Opaque
 public class Span extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public Span() {

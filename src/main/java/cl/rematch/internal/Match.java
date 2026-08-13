@@ -3,11 +3,11 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" })
+@Platform(include = { "REmatch/match.hpp", "REmatch/span.hpp" }, library = "jniREmatch")
 @Namespace("REmatch")
 public class Match extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public Match(Pointer p) {

@@ -6,11 +6,11 @@ import org.bytedeco.javacpp.annotation.*;
 @Platform(include = {
         "REmatch/fstream_reader.hpp",
         "reader_wrapper_java.hpp",
-})
+}, library = "jniREmatch")
 @Name("ReaderWrapperJava")
 public class ReaderWrapper extends Pointer {
     static {
-        JNILoader.load("jniREmatch");
+        Loader.load();
     }
 
     public ReaderWrapper(String path) {
