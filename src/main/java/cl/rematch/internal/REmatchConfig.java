@@ -3,11 +3,9 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.annotation.*;
 import org.bytedeco.javacpp.tools.*;
 
-// TODO: fix paths and check if @Platform can be removed from other classes
 @Properties(
     value = {
         @Platform(
-            includepath = "C:/Program Files (x86)/REmatch/include",
             include = {
                 "REmatch/REmatch.hpp",
                 "REmatch/span.hpp",
@@ -24,18 +22,21 @@ import org.bytedeco.javacpp.tools.*;
                 "REmatch/multi_query.hpp",
                 "REmatch/query.hpp",
                 "reader_wrapper_java.hpp"
-            },
-
-            preloadpath = "C:/Program Files (x86)/REmatch/lib",
-            preload = "REmatch",
-
-            linkpath = "C:/Program Files (x86)/REmatch/bin",
+            },            
+            // Build time
+            linkpath = "C:/Program Files (x86)/REmatch/lib",
             link = "REmatch",
+
+            // Runtime
+            // preload = "REmatch",
+            // preloadresource = "cl/rematch/internal/windows-x86_64/REmatch.dll",
+
             library = "jniREmatch"
         )
     }
 )
 public class REmatchConfig implements InfoMapper {
+    @Override
     public void map(InfoMap infoMap) {
     }
 }

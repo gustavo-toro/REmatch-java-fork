@@ -32,6 +32,10 @@ file(GLOB JAVA_SOURCES
     "${CMAKE_SOURCE_DIR}/../src/main/java/cl/rematch/*.java"
 )
 
+set(NATIVE_PATH
+    "${CMAKE_SOURCE_DIR}"
+)
+
 # 1. Incluye las rutas de encabezados necesarias para encontrar archivos .hpp
 find_package(REmatch REQUIRED)
 
@@ -54,7 +58,7 @@ set(JAVA_CLASSES_STAMP "${CMAKE_BINARY_DIR}/compiled.stamp")
 # 3.5 Compila los .java solo si se necesita para el .so
 add_custom_command(
     OUTPUT ${JAVA_CLASSES_STAMP}
-    COMMAND javac 
+    COMMAND ${Java_JAVAC_EXECUTABLE} 
             -cp ${JAVACPP_JAR}
             -d ${CMAKE_BINARY_DIR}/classes
             ${JAVACPP_SOURCES}
@@ -75,24 +79,24 @@ endif()
 # 5. Generar JNI .so solo si aun no existe
 set(JAVA_OPTS
     -cp "${CMAKE_BINARY_DIR}/classes"
-    "-Dplatform.includepath=${CMAKE_SOURCE_DIR}/../native" # TODO:
     -o ${JNI_WRAPPER_LIBRARY}
 )
 
 if(MSVC)
     list(APPEND JAVA_OPTS
-        "-Dplatform.includepath=${REMATCH_INCLUDES}"
-        "-Dplatform.linkpath=C:/Program Files (x86)/REmatch/lib" # TODO:
         -Xcompiler "/std:c++17"
         -Xcompiler "/MT"
     )
 endif()
+
+message(${JAVACPP_JAR})
 
 add_custom_command(
     OUTPUT ${JNI_OUTPUT_FILE}
     COMMAND ${Java_JAVA_EXECUTABLE}
             -jar ${JAVACPP_JAR}
             ${JAVA_OPTS}
+            "-Dplatform.includepath=${REMATCH_INCLUDES};${NATIVE_PATH}"
             cl.rematch.internal.REmatchConfig
             cl.rematch.internal.Flags
             cl.rematch.internal.Query
@@ -111,13 +115,12 @@ add_custom_command(
             cl.rematch.internal.MultiMatchVector
             cl.rematch.internal.MultiMatchIterator
             cl.rematch.internal.MultiMatchGenerator
-            cl.rematch.internal.JNILoader
-            cl.rematch.internal.NativeLoader
             cl.rematch.internal.Reader
             cl.rematch.internal.ReaderWrapper
     DEPENDS
         ${JAVA_CLASSES_STAMP}
         ${CMAKE_CURRENT_SOURCE_DIR}/reader_wrapper_java.hpp
+    VERBATIM
 )
 
 # 6. Crea un target para el JNI .so

@@ -3,10 +3,15 @@ package cl.rematch.internal;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.javacpp.annotation.*;
 
-@Platform(include = "REmatch/flags.hpp", library = "jniREmatch")
+@Properties(
+    // include = "REmatch/flags.hpp", library = "jniREmatch"
+    inherit = REmatchConfig.class
+
+)
 @Namespace("REmatch::library_interface")
 public class Flags extends Pointer {
     static {
+        // System.load("C:\\Program Files (x86)\\REmatch\\bin\\REmatch.dll");
         Loader.load();
     }
 
