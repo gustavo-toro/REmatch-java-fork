@@ -49,17 +49,11 @@
   <build>
     <resources>
       <resource>
-        <directory>${project.basedir}/build/classes</directory>
-        <includes>
-          <include>cl/rematch/internal/linux-x86_64/libjniREmatch.so</include>
-        </includes>
-      </resource>
-      <resource>
         <directory>src/main/resources</directory>
       </resource>
     </resources>
 
-    <plugins>
+     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -127,6 +121,55 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>unix</family>
+        </os>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/build/classes</directory>
+            <includes>
+              <include>cl/rematch/internal/linux-x86_64/libjniREmatch.so</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/build/classes</directory>
+            <includes>
+              <include>cl/rematch/internal/windows-x86_64/jniREmatch.dll</include>
+            </includes>
+          </resource>
+            <resource>
+              <directory>${project.basedir}/build/REmatch-install/bin</directory>
+              <includes>
+                <include>REmatch.dll</include>
+              </includes>
+              <targetPath>
+                cl/rematch/internal/windows-x86_64
+              </targetPath>
+            </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencyManagement>
     <dependencies>

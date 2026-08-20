@@ -36,17 +36,31 @@ set(NATIVE_PATH
     "${CMAKE_SOURCE_DIR}"
 )
 
-# 1. Incluye las rutas de encabezados necesarias para encontrar archivos .hpp
-find_package(REmatch REQUIRED)
+set(REMATCH_INSTALL_DIR "${CMAKE_BINARY_DIR}/REmatch-install")
 
-get_target_property(REMATCH_INCLUDES
-    REmatch::REmatch
-    INTERFACE_INCLUDE_DIRECTORIES
+set(REMATCH_INCLUDE_DIR "${REMATCH_INSTALL_DIR}/include")
+set(REMATCH_LIB_DIR "${REMATCH_INSTALL_DIR}/lib")
+set(REMATCH_BIN_DIR "${REMATCH_INSTALL_DIR}/bin")
+
+# include(cmake/REmatch.cmake)
+
+include(FetchContent)
+
+FetchContent_Declare(
+    REmatch
+    GIT_REPOSITORY https://github.com/REmatchChile/REmatch
+    GIT_TAG mvn
 )
 
-get_target_property(REMATCH_DLL
-    REmatch::REmatch
-    IMPORTED_LOCATION_RELEASE
+FetchContent_MakeAvailable(REmatch)
+
+add_custom_target(InstallREmatch
+    COMMAND ${CMAKE_COMMAND}
+            --install ${CMAKE_BINARY_DIR}
+            --prefix ${REMATCH_INSTALL_DIR}
+    DEPENDS
+        REmatch
+        rematch-cli
 )
 
 # 2. Definir nombre JNI
@@ -69,11 +83,9 @@ add_custom_command(
 
 # 4. Archivo esperado del JNI
 if(MSVC)
-    set(JNI_LIBRARY_W_EXTENSION "jniREmatch.dll")
-    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/jni/jniREmatch.dll")
+    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/classes/cl/rematch/internal/windows-x86_64/jniREmatch.dll")
 else()
-    set(JNI_LIBRARY_W_EXTENSION "libjniREmatch.so")
-    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/jni/libjniREmatch.so")
+    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/classes/cl/rematch/internal/linux/libjniREmatch.so")
 endif()
 
 # 5. Generar JNI .so solo si aun no existe
@@ -89,14 +101,24 @@ if(MSVC)
     )
 endif()
 
-message(${JAVACPP_JAR})
+set(REMATCH_JAVA_INCLUDES
+    ${REMATCH_INCLUDE_DIR}
+    ${NATIVE_PATH}
+)
+
+cmake_path(CONVERT "${REMATCH_JAVA_INCLUDES}" TO_NATIVE_PATH_LIST REMATCH_JAVA_INCLUDES)
+
+set(JNI_BUILD_STAMP "${CMAKE_BINARY_DIR}/build.stamp")
+
+message(${REMATCH_BIN_DIR})
 
 add_custom_command(
-    OUTPUT ${JNI_OUTPUT_FILE}
+    OUTPUT ${JNI_BUILD_STAMP}
     COMMAND ${Java_JAVA_EXECUTABLE}
             -jar ${JAVACPP_JAR}
             ${JAVA_OPTS}
-            "-Dplatform.includepath=${REMATCH_INCLUDES};${NATIVE_PATH}"
+            "-Dplatform.includepath=${REMATCH_JAVA_INCLUDES}"
+            "-Dplatform.linkpath=${REMATCH_LIB_DIR}"
             cl.rematch.internal.REmatchConfig
             cl.rematch.internal.Flags
             cl.rematch.internal.Query
@@ -119,11 +141,11 @@ add_custom_command(
             cl.rematch.internal.ReaderWrapper
     DEPENDS
         ${JAVA_CLASSES_STAMP}
-        ${CMAKE_CURRENT_SOURCE_DIR}/reader_wrapper_java.hpp
+        InstallREmatch
     VERBATIM
 )
 
 # 6. Crea un target para el JNI .so
 add_custom_target(GenerateJNIWrapper ALL
-    DEPENDS ${JNI_OUTPUT_FILE}
+    DEPENDS ${JNI_BUILD_STAMP}
 )

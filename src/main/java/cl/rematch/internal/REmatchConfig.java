@@ -23,14 +23,7 @@ import org.bytedeco.javacpp.tools.*;
                 "REmatch/query.hpp",
                 "reader_wrapper_java.hpp"
             },            
-            // Build time
-            linkpath = "C:/Program Files (x86)/REmatch/lib",
             link = "REmatch",
-
-            // Runtime
-            // preload = "REmatch",
-            // preloadresource = "cl/rematch/internal/windows-x86_64/REmatch.dll",
-
             library = "jniREmatch"
         )
     }
