@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(JavaREmatch)
 
+# Find JavaCPP
 find_package(Java REQUIRED)
 include(UseJava)
-
-message(STATUS "javac path: ${Java_JAVAC_EXECUTABLE}")
-message(STATUS "java path:  ${Java_JAVA_EXECUTABLE}")
 
 set(JAVACPP_VERSION "1.5.13" CACHE STRING "JavaCPP version")
 
@@ -22,8 +20,6 @@ find_jar(
     PATH_SUFFIXES "${JAVACPP_VERSION}"
 )
 
-set(OUT_DIR ${CMAKE_BINARY_DIR}/bin)
-
 file(GLOB_RECURSE JAVACPP_SOURCES
     "${CMAKE_SOURCE_DIR}/../src/main/java/cl/rematch/internal/*.java"
 )
@@ -36,14 +32,7 @@ set(NATIVE_PATH
     "${CMAKE_SOURCE_DIR}"
 )
 
-set(REMATCH_INSTALL_DIR "${CMAKE_BINARY_DIR}/REmatch-install")
-
-set(REMATCH_INCLUDE_DIR "${REMATCH_INSTALL_DIR}/include")
-set(REMATCH_LIB_DIR "${REMATCH_INSTALL_DIR}/lib")
-set(REMATCH_BIN_DIR "${REMATCH_INSTALL_DIR}/bin")
-
-# include(cmake/REmatch.cmake)
-
+# Install REmatch
 include(FetchContent)
 
 FetchContent_Declare(
@@ -51,8 +40,13 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/REmatchChile/REmatch
     GIT_TAG mvn
 )
-
 FetchContent_MakeAvailable(REmatch)
+
+set(REMATCH_INSTALL_DIR "${CMAKE_BINARY_DIR}/REmatch-install")
+
+set(REMATCH_INCLUDE_DIR "${REMATCH_INSTALL_DIR}/include")
+set(REMATCH_LIB_DIR "${REMATCH_INSTALL_DIR}/lib")
+set(REMATCH_BIN_DIR "${REMATCH_INSTALL_DIR}/bin")
 
 add_custom_target(InstallREmatch
     COMMAND ${CMAKE_COMMAND}
@@ -63,13 +57,12 @@ add_custom_target(InstallREmatch
         rematch-cli
 )
 
-# 2. Definir nombre JNI
+# Name of the generated library
 set(JNI_WRAPPER_LIBRARY jniREmatch)
 
-# 3. Archivo de salida de compilación Java, usado para saber si se debe compilar javacpp
 set(JAVA_CLASSES_STAMP "${CMAKE_BINARY_DIR}/compiled.stamp")
 
-# 3.5 Compila los .java solo si se necesita para el .so
+# Compile JavaCPP sources
 add_custom_command(
     OUTPUT ${JAVA_CLASSES_STAMP}
     COMMAND ${Java_JAVAC_EXECUTABLE} 
@@ -78,17 +71,8 @@ add_custom_command(
             ${JAVACPP_SOURCES}
     COMMAND ${CMAKE_COMMAND} -E touch ${JAVA_CLASSES_STAMP}
     DEPENDS ${JAVACPP_SOURCES}
-    COMMENT "Compilando archivos .java a .class"
 )
 
-# 4. Archivo esperado del JNI
-if(MSVC)
-    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/classes/cl/rematch/internal/windows-x86_64/jniREmatch.dll")
-else()
-    set(JNI_OUTPUT_FILE "${CMAKE_BINARY_DIR}/classes/cl/rematch/internal/linux/libjniREmatch.so")
-endif()
-
-# 5. Generar JNI .so solo si aun no existe
 set(JAVA_OPTS
     -cp "${CMAKE_BINARY_DIR}/classes"
     -o ${JNI_WRAPPER_LIBRARY}
@@ -110,8 +94,7 @@ cmake_path(CONVERT "${REMATCH_JAVA_INCLUDES}" TO_NATIVE_PATH_LIST REMATCH_JAVA_I
 
 set(JNI_BUILD_STAMP "${CMAKE_BINARY_DIR}/build.stamp")
 
-message(${REMATCH_BIN_DIR})
-
+# Compile the bindings
 add_custom_command(
     OUTPUT ${JNI_BUILD_STAMP}
     COMMAND ${Java_JAVA_EXECUTABLE}
@@ -145,7 +128,7 @@ add_custom_command(
     VERBATIM
 )
 
-# 6. Crea un target para el JNI .so
+# Target
 add_custom_target(GenerateJNIWrapper ALL
     DEPENDS ${JNI_BUILD_STAMP}
 )
