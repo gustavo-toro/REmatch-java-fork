@@ -1,0 +1,86 @@
+name: Release
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows-x86_64
+
+          - os: ubuntu-latest
+            platform: linux-x86_64
+
+          - os: macos-13
+            platform: macosx-x86_64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: oracle
+          java-version: '26'
+          cache: maven
+
+      - name: Import GPG key
+        shell: bash
+        run: |
+          echo "${{ secrets.MAVEN_GPG_PRIVATE_KEY }}" | base64 --decode | gpg --batch --import
+
+      - name: Build
+        run: mvn --batch-mode clean verify
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.platform }}
+          path: target/
+
+  publish:
+    name: Publish to Maven Central
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Download Windows
+        uses: actions/download-artifact@v5
+        with:
+          name: build-windows-x86_64
+          path: artifacts/windows
+
+      - name: Download Linux
+        uses: actions/download-artifact@v5
+        with:
+          name: build-linux-x86_64
+          path: artifacts/linux
+
+      - name: Download macOS
+        uses: actions/download-artifact@v5
+        with:
+          name: build-macosx-x86_64
+          path: artifacts/macos
+
+      - name: List artifacts
+        shell: bash
+        run: |
+          find artifacts -type f | sort
