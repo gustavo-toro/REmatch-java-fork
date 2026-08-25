@@ -54,7 +54,7 @@
       </resource>
     </resources>
 
-     <plugins>
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -97,9 +97,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.12.0</version>
         <configuration>
-          <excludePackageNames>
-            cl.rematch.internal
-          </excludePackageNames>
+          <excludePackageNames>cl.rematch.internal</excludePackageNames>
         </configuration>
         <executions>
           <execution>
@@ -160,16 +158,49 @@
               <include>cl/rematch/internal/windows-x86_64/jniREmatch.dll</include>
             </includes>
           </resource>
-            <resource>
-              <directory>${project.basedir}/build/REmatch-install/bin</directory>
-              <includes>
-                <include>REmatch.dll</include>
-              </includes>
-              <targetPath>
-                cl/rematch/internal/windows-x86_64
-              </targetPath>
-            </resource>
+          <resource>
+            <directory>${project.basedir}/build/REmatch-install/bin</directory>
+            <includes>
+              <include>REmatch.dll</include>
+            </includes>
+            <targetPath>cl/rematch/internal/windows-x86_64</targetPath>
+          </resource>
         </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.4.2</version>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>cl/rematch/internal/windows-x86_64/**</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+
+              <execution>
+                <id>platform-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classifier>windows-x86_64</classifier>
+                  <includes>
+                    <include>cl/rematch/internal/windows-x86_64/**</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>
