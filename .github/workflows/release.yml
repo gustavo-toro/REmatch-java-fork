@@ -30,6 +30,12 @@ jobs:
           java-version: '26'
           cache: maven
 
+      - name: Configure CMake
+        run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
       - name: Import GPG key
         shell: bash
         run: |
