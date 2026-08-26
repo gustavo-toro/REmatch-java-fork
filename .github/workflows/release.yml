@@ -16,7 +16,7 @@ jobs:
           - os: ubuntu-latest
             platform: linux-x86_64
 
-          - os: macos-13
+          - os: macos-latest
             platform: macosx-x86_64
 
     steps:
@@ -29,6 +29,15 @@ jobs:
           distribution: oracle
           java-version: '26'
           cache: maven
+
+      - name: Resolve Maven dependencies
+        run: mvn dependency:resolve
+
+      - name: Configure CMake
+        run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
 
       - name: Import GPG key
         shell: bash

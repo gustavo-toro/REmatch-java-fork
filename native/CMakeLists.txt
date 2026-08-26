@@ -7,11 +7,11 @@ include(UseJava)
 
 set(JAVACPP_VERSION "1.5.13" CACHE STRING "JavaCPP version")
 
-if(WIN32)
-    set(MAVEN_REPO "$ENV{USERPROFILE}/.m2/repository")
-else()
-    set(MAVEN_REPO "$ENV{HOME}/.m2/repository")
-endif()
+execute_process(
+    COMMAND mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
+    OUTPUT_VARIABLE MAVEN_REPO
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 find_jar(
     JAVACPP_JAR
