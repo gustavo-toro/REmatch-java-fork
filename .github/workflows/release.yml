@@ -30,6 +30,12 @@ jobs:
           java-version: '26'
           cache: maven
 
+      - name: Resolve Maven dependencies
+        run: mvn dependency:resolve
+
+      - name: Debug
+        run: mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
+
       - name: Configure CMake
         run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 
