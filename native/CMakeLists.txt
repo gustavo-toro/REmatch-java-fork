@@ -14,7 +14,7 @@ else()
     set(MAVEN_COMMAND "${MAVEN_EXECUTABLE}")
 endif()
 execute_process(
-    COMMAND ${MAVEN_EXECUTABLE} help:evaluate "-Dexpression=settings.localRepository" -q -DforceStdout
+    COMMAND ${MAVEN_COMMAND} help:evaluate "-Dexpression=settings.localRepository" -q -DforceStdout
     OUTPUT_VARIABLE MAVEN_REPO
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
@@ -26,9 +26,7 @@ find_jar(
     PATH_SUFFIXES "${JAVACPP_VERSION}"
 )
 if(NOT JAVACPP_JAR)
-    message(FATAL_ERROR
-        "Could not find JavaCPP ${JAVACPP_VERSION} JAR"
-    )
+    message(FATAL_ERROR"Could not find JavaCPP ${JAVACPP_VERSION} JAR")
 endif()
 
 file(GLOB_RECURSE JAVACPP_SOURCES
