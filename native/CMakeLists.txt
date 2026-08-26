@@ -92,6 +92,10 @@ if(MSVC)
         -Xcompiler "/std:c++17"
         -Xcompiler "/MT"
     )
+else()
+    list(APPEND JAVA_OPTS
+        -Xcompiler "-std=c++17"
+    )
 endif()
 
 set(REMATCH_JAVA_INCLUDES
