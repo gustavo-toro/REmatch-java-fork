@@ -39,6 +39,11 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
+      - name: Show directory tree
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: tree build
+
       - name: Import GPG key
         shell: bash
         run: |

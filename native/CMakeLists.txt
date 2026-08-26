@@ -87,7 +87,7 @@ set(JAVA_OPTS
     -o ${JNI_WRAPPER_LIBRARY}
 )
 
-if(MSVC)
+if(WIN32)
     list(APPEND JAVA_OPTS
         -Xcompiler "/std:c++17"
         -Xcompiler "/MT"
