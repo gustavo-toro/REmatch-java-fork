@@ -120,7 +120,6 @@ jobs:
 
       - name: Prepare bundle
         run: |
-          ls | sort
           mkdir -p cl/rematch/rematch/${{ inputs.version }}
           cp build-windows-x86_64/* cl/rematch/rematch/${{ inputs.version }}
           cp build-linux-x86_64/* cl/rematch/rematch/${{ inputs.version }}
@@ -130,13 +129,11 @@ jobs:
 
       - name: Publish to Maven Central
         env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         run: |
           unzip -l central-bundle.zip
-          printf "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_PASSWORD" | base64
           curl --request POST \
             --verbose \
-            --header 'Authorization: Bearer ZXhhbXBsZV91c2VybmFtZTpleGFtcGxlX3Bhc3N3b3Jk' \
+            --header 'Authorization: Bearer $MAVEN_CENTRAL_TOKEN' \
             --form bundle=@central-bundle.zip \
             https://central.sonatype.com/api/v1/publisher/upload
