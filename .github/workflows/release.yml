@@ -68,7 +68,7 @@ jobs:
         if: matrix.classifier == 'linux-x86_64'
         uses: actions/upload-artifact@v7
         with:
-          name: bundle
+          name: build-common
           path: |
             target/rematch-${{ inputs.version }}-javadoc.jar*
             target/rematch-${{ inputs.version }}-sources.jar*
@@ -80,7 +80,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
-          name: bundle
+          name: build
           path: |
             target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar*
 
@@ -103,7 +103,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v7
         with:
-          name: bundle
+          name: build*
 
       - name: List artifacts
         shell: bash
@@ -112,8 +112,8 @@ jobs:
 
       - name: Prepare bundle
         run: |
-          mkdir -p cl/rematch/0.1.0
-          cp bundle/* cl/rematch/0.1.0
+          mkdir -p cl/rematch/${{ inputs.version }}
+          cp bundle/* cl/rematch/${{ inputs.version }}
           zip -r central-bundle.zip cl
 
       - name: Publish
