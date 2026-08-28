@@ -6,7 +6,7 @@ on:
         required: true
         type: string
 
-# jobs:
+jobs:
 #   get_version:
 #     name: Get REmatch-java version
 #     runs-on: ubuntu-latest
