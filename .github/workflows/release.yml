@@ -108,7 +108,7 @@ jobs:
       - name: List artifacts
         shell: bash
         run: |
-          find bundle -type f | sort
+          find cl -type f | sort
 
       - name: Prepare bundle
         run: |
