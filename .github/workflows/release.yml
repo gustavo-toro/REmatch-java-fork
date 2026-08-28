@@ -126,13 +126,13 @@ jobs:
           cp build-macosx-arm64/* cl/rematch/rematch/${{ inputs.version }}
           cp build-common/* cl/rematch/rematch/${{ inputs.version }}
           zip -r central-bundle.zip cl
+          unzip -l central-bundle.zip
 
       - name: Publish to Maven Central
         env:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         run: |
-          unzip -l central-bundle.zip
-          curl --request POST \
+          curl --fail-with-body \
             --verbose \
             --header 'Authorization: Bearer $MAVEN_CENTRAL_TOKEN' \
             --form bundle=@central-bundle.zip \
