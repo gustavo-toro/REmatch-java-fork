@@ -68,27 +68,21 @@ jobs:
         if: matrix.classifier == 'linux-x86_64'
         uses: actions/upload-artifact@v7
         with:
-          name: build-common
+          name: bundle
           path: |
-            target/rematch-${{ inputs.version }}-javadoc.jar
-            target/rematch-${{ inputs.version }}-javadoc.jar.asc
-            target/rematch-${{ inputs.version }}-sources.jar
-            target/rematch-${{ inputs.version }}-sources.jar.asc
-            target/rematch-${{ inputs.version }}-javadoc.jar
-            target/rematch-${{ inputs.version }}.jar
-            target/rematch-${{ inputs.version }}.jar.asc
-            target/rematch-${{ inputs.version }}.pom
-            target/rematch-${{ inputs.version }}.pom.asc
-            target/rematch-platform-${{ inputs.version }}.pom
-            target/rematch-platform-${{ inputs.version }}.pom.asc
+            target/rematch-${{ inputs.version }}-javadoc.jar*
+            target/rematch-${{ inputs.version }}-sources.jar*
+            target/rematch-${{ inputs.version }}-javadoc.jar*
+            target/rematch-${{ inputs.version }}.jar*
+            target/rematch-${{ inputs.version }}.pom*
+            target/rematch-platform-${{ inputs.version }}.pom*
 
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
-          name: build-${{ matrix.classifier }}
+          name: bundle
           path: |
-            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar
-            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar.asc
+            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar*
 
   publish:
     name: Publish to Maven Central
@@ -109,10 +103,19 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v7
         with:
-          pattern: build-*
-          path: artifacts
+          name: bundle
 
       - name: List artifacts
         shell: bash
         run: |
-          find artifacts -type f | sort
+          find bundle -type f | sort
+
+      - name: Prepare bundle
+        run: |
+          mkdir -p cl/rematch/0.1.0
+          cp bundle/* cl/rematch/0.1.0
+          zip -r central-bundle.zip cl
+
+      - name: Publish
+        # run: mvn deploy
+        run: unzip -l central-bundle.zip
