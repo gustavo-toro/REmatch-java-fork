@@ -44,12 +44,6 @@ jobs:
       - name: Build CMake
         run: cmake --build build --config Release
 
-      - name: Show directory tree
-        if: matrix.os == 'macos-latest'
-        shell: bash
-        run: |
-          find build -print
-
       - name: Import GPG key
         shell: bash
         run: |
@@ -108,12 +102,15 @@ jobs:
       - name: List artifacts
         shell: bash
         run: |
-          find cl -type f | sort
+          la
+          find build -type f | sort
+          find build-common -type f | sort
 
       - name: Prepare bundle
         run: |
           mkdir -p cl/rematch/${{ inputs.version }}
-          cp bundle/* cl/rematch/${{ inputs.version }}
+          cp build/* cl/rematch/${{ inputs.version }}
+          cp build-common/* cl/rematch/${{ inputs.version }}
           zip -r central-bundle.zip cl
 
       - name: Publish
