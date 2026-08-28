@@ -93,7 +93,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
-          name: build
+          name: build-${{ matrix.classifier }}
           path: |
             target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar*
 
@@ -118,20 +118,20 @@ jobs:
         with:
           pattern: build*
 
-      - name: List artifacts
-        shell: bash
-        run: |
-          ls
-          find build -type f | sort
-          find build-common -type f | sort
-
       - name: Prepare bundle
         run: |
           mkdir -p cl/rematch/${{ inputs.version }}
-          cp build/* cl/rematch/${{ inputs.version }}
-          cp build-common/* cl/rematch/${{ inputs.version }}
+          cp build-windows-x86_64 cl/rematch/rematch/${{ inputs.version }}
+          cp build-linux-x86_64 cl/rematch/rematch/${{ inputs.version }}
+          cp build-macosx-x86_64 cl/rematch/rematch/${{ inputs.version }}
+          cp build-common/* cl/rematch/rematch/${{ inputs.version }}
           zip -r central-bundle.zip cl
 
       - name: Publish
-        # run: mvn deploy
-        run: unzip -l central-bundle.zip
+        run: |
+          unzip -l central-bundle.zip
+          curl --request POST \
+            --verbose \
+            --header 'Authorization: Bearer ZXhhbXBsZV91c2VybmFtZTpleGFtcGxlX3Bhc3N3b3Jk' \
+            --form bundle=@central-bundle.zip \
+            https://central.sonatype.com/api/v1/publisher/upload
