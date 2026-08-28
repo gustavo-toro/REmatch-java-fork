@@ -1,9 +1,14 @@
 name: Release
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
+
 jobs:
   build:
-    name: Build ${{ matrix.platform }}
+    name: Build ${{ matrix.classifier }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -11,13 +16,13 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            platform: windows-x86_64
+            classifier: windows-x86_64
 
           - os: ubuntu-latest
-            platform: linux-x86_64
+            classifier: linux-x86_64
 
           - os: macos-latest
-            platform: macosx-x86_64
+            classifier: macosx-x86_64
 
     steps:
       - name: Checkout
@@ -55,11 +60,35 @@ jobs:
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
+      - name: Prepare platform artifact
+        if: matrix.classifier == 'linux-x86_64'
+        run: mvn -f pom-platform.xml verify
+
+      - name: Upload common artifacts
+        if: matrix.classifier == 'linux-x86_64'
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-common
+          path: |
+            target/rematch-${{ inputs.version }}-javadoc.jar
+            target/rematch-${{ inputs.version }}-javadoc.jar.asc
+            target/rematch-${{ inputs.version }}-sources.jar
+            target/rematch-${{ inputs.version }}-sources.jar.asc
+            target/rematch-${{ inputs.version }}-javadoc.jar
+            target/rematch-${{ inputs.version }}.jar
+            target/rematch-${{ inputs.version }}.jar.asc
+            target/rematch-${{ inputs.version }}.pom
+            target/rematch-${{ inputs.version }}.pom.asc
+            target/rematch-platform-${{ inputs.version }}.pom
+            target/rematch-platform-${{ inputs.version }}.pom.asc
+
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
-          name: build-${{ matrix.platform }}
-          path: target/
+          name: build-${{ matrix.classifier }}
+          path: |
+            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar
+            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar.asc
 
   publish:
     name: Publish to Maven Central
@@ -77,23 +106,11 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Download Windows
+      - name: Download artifacts
         uses: actions/download-artifact@v7
         with:
-          name: build-windows-x86_64
-          path: artifacts/windows
-
-      - name: Download Linux
-        uses: actions/download-artifact@v7
-        with:
-          name: build-linux-x86_64
-          path: artifacts/linux
-
-      - name: Download macOS
-        uses: actions/download-artifact@v7
-        with:
-          name: build-macosx-x86_64
-          path: artifacts/macos
+          pattern: build-*
+          path: artifacts
 
       - name: List artifacts
         shell: bash
