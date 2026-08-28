@@ -121,9 +121,9 @@ jobs:
       - name: Prepare bundle
         run: |
           mkdir -p cl/rematch/${{ inputs.version }}
-          cp build-windows-x86_64 cl/rematch/rematch/${{ inputs.version }}
-          cp build-linux-x86_64 cl/rematch/rematch/${{ inputs.version }}
-          cp build-macosx-x86_64 cl/rematch/rematch/${{ inputs.version }}
+          cp build-windows-x86_64/* cl/rematch/rematch/${{ inputs.version }}
+          cp build-linux-x86_64/* cl/rematch/rematch/${{ inputs.version }}
+          cp build-macosx-x86_64/* cl/rematch/rematch/${{ inputs.version }}
           cp build-common/* cl/rematch/rematch/${{ inputs.version }}
           zip -r central-bundle.zip cl
 
