@@ -134,7 +134,7 @@ jobs:
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: |
           unzip -l central-bundle.zip
-          printf "${{ MAVEN_CENTRAL_USERNAME }}:${{ MAVEN_CENTRAL_PASSWORD }}" | base64
+          printf "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_PASSWORD" | base64
           curl --request POST \
             --verbose \
             --header 'Authorization: Bearer ZXhhbXBsZV91c2VybmFtZTpleGFtcGxlX3Bhc3N3b3Jk' \
