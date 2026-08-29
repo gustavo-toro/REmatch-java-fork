@@ -1,30 +1,32 @@
 name: Release
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        required: true
-        type: string
 
 jobs:
-#   get_version:
-#     name: Get REmatch-java version
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v7
+  get_version:
+    name: Get REmatch-java version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
-#       - name: Set up Java
-#         uses: actions/setup-java@v6
-#         with:
-#           distribution: oracle
-#           java-version: '26'
-#           cache: maven
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: oracle
+          java-version: '26'
+          cache: maven
 
-#       - name: Get version
-#         run: |
-#           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-#           echo "REMATCH_VERSION=$version" >> $GITHUB_OUTPUT
+      - name: Get version
+        run: |
+          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          printf "$version" > version.txt
+
+      - name: Upload version
+        uses: actions/upload-artifact@v7
+        with:
+          path: version.txt
+          archive: false
 
   build:
     name: Build ${{ matrix.classifier }}
@@ -34,14 +36,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: windows-11-arm
+            classifier: windows-arm64
+
           - os: windows-latest
             classifier: windows-x86_64
+
+          - os: ubuntu-24.04-arm
+            classifier: linux-arm64
 
           - os: ubuntu-latest
             classifier: linux-x86_64
 
           - os: macos-latest
             classifier: macosx-arm64
+
+          - os: macos-26
+            classifier: macosx-x86_64
 
     steps:
       - name: Checkout
@@ -77,30 +88,47 @@ jobs:
         if: matrix.classifier == 'linux-x86_64'
         run: mvn -f pom-platform.xml verify
 
+      - name: Download version
+        uses: actions/download-artifact@v7
+        with:
+          name: version.txt
+      - run: |
+          version=$(cat version.txt)
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo "Version: $VERSION"
+
       - name: Upload common artifacts
         if: matrix.classifier == 'linux-x86_64'
         uses: actions/upload-artifact@v7
         with:
           name: build-common
           path: |
-            target/rematch-${{ inputs.version }}-javadoc.jar*
-            target/rematch-${{ inputs.version }}-sources.jar*
-            target/rematch-${{ inputs.version }}-javadoc.jar*
-            target/rematch-${{ inputs.version }}.jar*
-            target/rematch-${{ inputs.version }}.pom*
-            target/rematch-platform-${{ inputs.version }}.pom*
+            target/rematch-${VERSION}-javadoc.jar*
+            target/rematch-${VERSION}-sources.jar*
+            target/rematch-${VERSION}-javadoc.jar*
+            target/rematch-${VERSION}.jar*
+            target/rematch-${VERSION}.pom*
+
+      - if: matrix.classifier == 'linux-x86_64'
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-platform
+          path: |
+            target/rematch-platform-${VERSION}.pom*
 
       - name: Upload build
         uses: actions/upload-artifact@v7
         with:
           name: build-${{ matrix.classifier }}
           path: |
-            target/rematch-${{ inputs.version }}-${{ matrix.classifier }}.jar*
+            target/rematch-${VERSION}-${{ matrix.classifier }}.jar*
 
   publish:
     name: Publish to Maven Central
     needs: build
     runs-on: ubuntu-latest
+    env:
+      MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
 
     steps:
       - name: Checkout
@@ -118,19 +146,32 @@ jobs:
         with:
           pattern: build*
 
+      - name: Download version
+        uses: actions/download-artifact@v7
+        with:
+          name: version.txt
+      - run: |
+          version=$(cat version.txt)
+          echo "VERSION=$version" >> $GITHUB_ENV
+
       - name: Prepare bundle
         run: |
-          mkdir -p cl/rematch/rematch/${{ inputs.version }}
-          cp build-windows-x86_64/* cl/rematch/rematch/${{ inputs.version }}
-          cp build-linux-x86_64/* cl/rematch/rematch/${{ inputs.version }}
-          cp build-macosx-arm64/* cl/rematch/rematch/${{ inputs.version }}
-          cp build-common/* cl/rematch/rematch/${{ inputs.version }}
+          mkdir -p cl/rematch/rematch/${VERSION}
+          cp build-windows-x86_64/* cl/rematch/rematch/${VERSION}
+          cp build-windows-arm64/* cl/rematch/rematch/${VERSION}
+          cp build-linux-x86_64/* cl/rematch/rematch/${VERSION}
+          cp build-linux-arm64/* cl/rematch/rematch/${VERSION}
+          cp build-macosx-x86_64/* cl/rematch/rematch/${VERSION}
+          cp build-macosx-arm64/* cl/rematch/rematch/${VERSION}
+          cp build-common/* cl/rematch/rematch/${VERSION}
+
+          mkdir -p cl/rematch/rematch-platform/${VERSION}
+          cp build-platform/* cl/rematch/rematch-platform/${VERSION}
+
           zip -r central-bundle.zip cl
           unzip -l central-bundle.zip
 
-      - name: Publish to Maven Central
-        env:
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+      - name: Publish rematch to Maven Central
         run: |
           curl --fail-with-body \
             --verbose \
