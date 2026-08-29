@@ -62,8 +62,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
-          distribution: oracle
-          java-version: '26'
+          distribution: temurin
+          java-version: '25'
           cache: maven
 
       - name: Resolve Maven dependencies
@@ -143,11 +143,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up JDK
+      - name: Set up Java
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '25'
           cache: maven
 
       - name: Download artifacts
