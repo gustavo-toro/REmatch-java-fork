@@ -13,8 +13,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
-          distribution: oracle
-          java-version: '26'
+          distribution: temurin
+          java-version: '25'
           cache: maven
 
       - name: Get version
@@ -25,12 +25,13 @@ jobs:
       - name: Upload version
         uses: actions/upload-artifact@v7
         with:
+          name: version
           path: version.txt
-          archive: false
 
   build:
     name: Build ${{ matrix.classifier }}
     runs-on: ${{ matrix.os }}
+    needs: get_version
 
     strategy:
       fail-fast: false
@@ -74,6 +75,11 @@ jobs:
       - name: Build CMake
         run: cmake --build build --config Release
 
+      - name: Show directory tree
+        shell: bash
+        run: |
+          find build -print
+
       - name: Import GPG key
         shell: bash
         run: |
@@ -91,8 +97,10 @@ jobs:
       - name: Download version
         uses: actions/download-artifact@v7
         with:
-          name: version.txt
-      - run: |
+          name: version
+          path: .
+      - name: Set version as env variable
+        run: |
           version=$(cat version.txt)
           echo "VERSION=$version" >> $GITHUB_ENV
           echo "Version: $VERSION"
@@ -149,8 +157,10 @@ jobs:
       - name: Download version
         uses: actions/download-artifact@v7
         with:
-          name: version.txt
-      - run: |
+          name: version
+          path: .
+      - name: Set version as env variable
+        run: |
           version=$(cat version.txt)
           echo "VERSION=$version" >> $GITHUB_ENV
 
