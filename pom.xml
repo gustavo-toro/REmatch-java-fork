@@ -149,11 +149,12 @@
 
   <profiles>
     <profile>
-      <id>linux</id>
+      <id>linux-x86_64</id>
       <activation>
         <os>
           <family>unix</family>
           <name>Linux</name>
+          <arch>x86_64</arch>
         </os>
       </activation>
       <build>
@@ -204,10 +205,67 @@
     </profile>
 
     <profile>
-      <id>windows</id>
+      <id>linux-arm64</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <name>Linux</name>
+          <arch>arm64</arch>
+        </os>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/build/classes</directory>
+            <includes>
+              <include>cl/rematch/internal/linux-arm64/libjniREmatch.so</include>
+            </includes>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.5.1</version>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>cl/rematch/internal/linux-arm64/**</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+
+              <execution>
+                <id>platform-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classifier>linux-arm64</classifier>
+                  <includes>
+                    <include>cl/rematch/internal/linux-arm64/**</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>windows-x86_64</id>
       <activation>
         <os>
           <family>Windows</family>
+          <arch>amd64</arch>
         </os>
       </activation>
       <build>
@@ -265,10 +323,128 @@
     </profile>
 
     <profile>
-      <id>mac</id>
+      <id>windows-arm64</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+          <arch>arm64</arch>
+        </os>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/build/classes</directory>
+            <includes>
+              <include>cl/rematch/internal/windows-arm64/jniREmatch.dll</include>
+            </includes>
+          </resource>
+          <resource>
+            <directory>${project.basedir}/build/REmatch-install/bin</directory>
+            <includes>
+              <include>REmatch.dll</include>
+            </includes>
+            <targetPath>cl/rematch/internal/windows-arm64</targetPath>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.5.1</version>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>cl/rematch/internal/windows-arm64/**</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+
+              <execution>
+                <id>platform-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classifier>windows-arm64</classifier>
+                  <includes>
+                    <include>cl/rematch/internal/windows-arm64/**</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>macosx-x86_64</id>
       <activation>
         <os>
           <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/build/classes</directory>
+            <includes>
+              <include>cl/rematch/internal/macosx-x86_64/libjniREmatch.dylib</include>
+            </includes>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.5.1</version>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>cl/rematch/internal/macosx-x86_64/**</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+
+              <execution>
+                <id>platform-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classifier>macosx-x86_64</classifier>
+                  <includes>
+                    <include>cl/rematch/internal/macosx-x86_64/**</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>macosx-arm64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>arm64</arch>
         </os>
       </activation>
       <build>

@@ -69,6 +69,11 @@ jobs:
       - name: Resolve Maven dependencies
         run: mvn dependency:resolve
 
+      - name: Print properties
+        run: |
+          mvn help:evaluate -Dexpression=os.arch
+          mvn help:evaluate -Dexpression=os.name
+
       - name: Configure CMake
         run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 
@@ -78,7 +83,8 @@ jobs:
       - name: Show directory tree
         shell: bash
         run: |
-          find build -print
+          find build/classes -print
+          find build/REmatch-install -print
 
       - name: Import GPG key
         shell: bash
