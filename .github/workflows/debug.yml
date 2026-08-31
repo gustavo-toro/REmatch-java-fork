@@ -18,6 +18,12 @@ jobs:
           uname -a
           uname -m
           lscpu
+          which c++
+          c++ --version
+          which gcc
+          gcc --version
+          which clang
+          clang --version || true
 
       - name: Install Catch2
         run: |
@@ -32,8 +38,9 @@ jobs:
           git clone https://github.com/REmatchChile/REmatch.git
           cd REmatch
           cmake -Bbuild -S. \
-            -DBUILD_TESTING=ON \
+            -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTING=ON \
             -DBUILD_SHARED_LIBS=ON \
             -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/REmatch"
 
