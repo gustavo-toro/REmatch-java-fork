@@ -1,0 +1,87 @@
+name: Debug
+on:
+  workflow_dispatch:
+
+jobs:
+  cpp:
+    name: Build ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04-arm, ubuntu-24.04]
+
+    steps:
+      - name: Environment
+        run: |
+          uname -a
+          uname -m
+          lscpu
+
+      - name: Install REmatch
+        run: |
+          git clone git@github.com:REmatchChile/REmatch.git
+          cd REmatch
+          cmake -Bbuild -S. \
+            -DBUILD_TESTING=ON \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/REmatch"
+
+          cmake --build build --verbose
+          cmake --install build
+
+          echo "TESTS"
+          ./build/bin/rematch-test-d
+
+          echo "INSTALL DIR"
+          find "$RUNNER_TEMP/REmatch" -print
+
+          echo "LIBRARY"
+          file "$RUNNER_TEMP/REmatch/lib/libREmatch.so"
+
+          echo "ELF"
+          readelf -h "$RUNNER_TEMP/REmatch/lib/libREmatch.so"
+
+          echo "DEPENDENCIES"
+          ldd "$RUNNER_TEMP/REmatch/lib/libREmatch.so"
+
+  java:
+    name: Java ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04-arm
+          - ubuntu-24.04
+    steps:
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Resolve Maven dependencies
+        run: mvn dependency:resolve
+
+      - name: Configure CMake
+        run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build CMake
+        run: cmake --build build --config Release
+
+      - name: Show directory tree
+        shell: bash
+        run: |
+          find build/classes -print
+          find build/REmatch-install -print
+
+      - name: Java tests
+        run: |
+          mvn test
