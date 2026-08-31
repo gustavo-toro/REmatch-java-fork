@@ -44,6 +44,7 @@ public class QueryTest {
         List<Match> actual = new ArrayList<>();
 
         for (Match m : query.findIter(document)) {
+            System.out.println(m + ": " + m.group(0));
             actual.add(m);
         }
 
@@ -61,6 +62,7 @@ public class QueryTest {
         List<Match> actual = new ArrayList<>();
 
         for (Match m : query.findIter(reader)) {
+            System.out.println(m + ": " + m.group(0));
             actual.add(m);
         }
 
