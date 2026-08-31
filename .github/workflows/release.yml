@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: '21'
           cache: maven
 
       - name: Get version
@@ -40,19 +40,19 @@ jobs:
           - os: windows-11-arm
             classifier: windows-arm64
 
-          - os: windows-latest
+          - os: windows-2025
             classifier: windows-x86_64
 
           - os: ubuntu-24.04-arm
             classifier: linux-arm64
 
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             classifier: linux-x86_64
 
-          - os: macos-latest
+          - os: macos-26
             classifier: macosx-arm64
 
-          - os: macos-26
+          - os: macos-26-intel
             classifier: macosx-x86_64
 
     steps:
@@ -63,7 +63,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: '21'
           cache: maven
 
       - name: Resolve Maven dependencies
@@ -154,7 +154,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: '21'
           cache: maven
 
       - name: Download artifacts

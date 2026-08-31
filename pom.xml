@@ -154,7 +154,7 @@
         <os>
           <family>unix</family>
           <name>Linux</name>
-          <arch>x86_64</arch>
+          <arch>amd64</arch>
         </os>
       </activation>
       <build>
@@ -210,7 +210,7 @@
         <os>
           <family>unix</family>
           <name>Linux</name>
-          <arch>arm64</arch>
+          <arch>aarch64</arch>
         </os>
       </activation>
       <build>
@@ -444,7 +444,7 @@
       <activation>
         <os>
           <family>mac</family>
-          <arch>arm64</arch>
+          <arch>aarch64</arch>
         </os>
       </activation>
       <build>
