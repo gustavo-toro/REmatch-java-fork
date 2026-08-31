@@ -21,7 +21,7 @@ jobs:
 
       - name: Install REmatch
         run: |
-          git clone git@github.com:REmatchChile/REmatch.git
+          git clone https://github.com/REmatchChile/REmatch.git
           cd REmatch
           cmake -Bbuild -S. \
             -DBUILD_TESTING=ON \
