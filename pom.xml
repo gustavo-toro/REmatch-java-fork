@@ -327,7 +327,7 @@
       <activation>
         <os>
           <family>Windows</family>
-          <arch>arm64</arch>
+          <arch>aarch64</arch>
         </os>
       </activation>
       <build>
