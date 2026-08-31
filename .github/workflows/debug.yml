@@ -39,7 +39,6 @@ jobs:
           cd REmatch
           cmake -Bbuild -S. \
             -DCMAKE_CXX_COMPILER=clang++ \
-            # -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_TESTING=ON \
             -DBUILD_SHARED_LIBS=ON \
