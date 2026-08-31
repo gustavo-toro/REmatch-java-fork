@@ -19,6 +19,14 @@ jobs:
           uname -m
           lscpu
 
+      - name: Install Catch2
+        run: |
+          git clone https://github.com/catchorg/Catch2.git
+          cmake -B Catch2/build \
+            -S Catch2 \
+            -DBUILD_TESTING=OFF
+          sudo cmake --build Catch2/build --target install
+
       - name: Install REmatch
         run: |
           git clone https://github.com/REmatchChile/REmatch.git
@@ -57,15 +65,15 @@ jobs:
           - ubuntu-24.04-arm
           - ubuntu-24.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
-
-      - name: Checkout
-        uses: actions/checkout@v7
 
       - name: Resolve Maven dependencies
         run: mvn dependency:resolve
