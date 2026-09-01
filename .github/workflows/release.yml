@@ -119,10 +119,10 @@ jobs:
         with:
           name: build-common
           path: |
-            target/rematch-${VERSION}-javadoc.jar*
-            target/rematch-${VERSION}-sources.jar*
-            target/rematch-${VERSION}.jar*
-            target/rematch-${VERSION}.pom*
+            target/rematch-${{ env.VERSION }}-javadoc.jar*
+            target/rematch-${{ env.VERSION }}-sources.jar*
+            target/rematch-${{ env.VERSION }}.jar*
+            target/rematch-${{ env.VERSION }}.pom*
 
       - if: matrix.classifier == 'linux-x86_64'
         uses: actions/upload-artifact@v7
