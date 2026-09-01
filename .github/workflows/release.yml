@@ -21,6 +21,7 @@ jobs:
         run: |
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           printf "$version" > version.txt
+          echo "Version: $version"
 
       - name: Upload version
         uses: actions/upload-artifact@v7
@@ -109,7 +110,7 @@ jobs:
         run: |
           version=$(cat version.txt)
           echo "VERSION=$version" >> $GITHUB_ENV
-          echo "Version: $VERSION"
+          echo "Version: $version"
 
       - name: Upload common artifacts
         if: matrix.classifier == 'linux-x86_64'
@@ -170,13 +171,14 @@ jobs:
         run: |
           version=$(cat version.txt)
           echo "VERSION=$version" >> $GITHUB_ENV
+          echo "Version: $version"
 
       - name: Prepare bundle
         run: |
           mkdir -p cl/rematch/rematch/${VERSION}
           cp build-windows-x86_64/* cl/rematch/rematch/${VERSION}
           cp build-windows-arm64/* cl/rematch/rematch/${VERSION}
-          cp build-linux-x86_64/* cl/rematch/rematch/${VERSION}
+          # cp build-linux-x86_64/* cl/rematch/rematch/${VERSION}
           cp build-linux-arm64/* cl/rematch/rematch/${VERSION}
           cp build-macosx-x86_64/* cl/rematch/rematch/${VERSION}
           cp build-macosx-arm64/* cl/rematch/rematch/${VERSION}
