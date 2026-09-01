@@ -121,7 +121,6 @@ jobs:
           path: |
             target/rematch-${VERSION}-javadoc.jar*
             target/rematch-${VERSION}-sources.jar*
-            target/rematch-${VERSION}-javadoc.jar*
             target/rematch-${VERSION}.jar*
             target/rematch-${VERSION}.pom*
 
@@ -137,7 +136,7 @@ jobs:
         with:
           name: build-${{ matrix.classifier }}
           path: |
-            target/rematch-${VERSION}-${{ matrix.classifier }}.jar*
+            target/rematch-${{ env.VERSION }}-${{ matrix.classifier }}.jar*
 
   publish:
     name: Publish to Maven Central
