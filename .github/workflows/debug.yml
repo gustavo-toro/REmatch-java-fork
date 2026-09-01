@@ -48,7 +48,7 @@ jobs:
           cmake --install build
 
           echo "TESTS"
-          ./build/bin/rematch-test-d
+          ./build/bin/rematch-test
 
           echo "INSTALL DIR"
           find "$RUNNER_TEMP/REmatch" -print
