@@ -80,12 +80,6 @@ jobs:
       - name: Build CMake
         run: cmake --build build --config Release
 
-      - name: Show directory tree
-        shell: bash
-        run: |
-          find build/classes -print
-          find build/REmatch-install -print
-
       - name: Import GPG key
         shell: bash
         run: |
@@ -95,6 +89,13 @@ jobs:
         run: mvn --batch-mode clean verify
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Show directory tree
+        shell: bash
+        run: |
+          find build/classes -print
+          find build/REmatch-install -print
+          find target -print
 
       - name: Prepare platform artifact
         if: matrix.classifier == 'linux-x86_64'
