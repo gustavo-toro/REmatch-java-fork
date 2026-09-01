@@ -178,8 +178,8 @@ jobs:
           mkdir -p cl/rematch/rematch/${VERSION}
           cp build-windows-x86_64/* cl/rematch/rematch/${VERSION}
           cp build-windows-arm64/* cl/rematch/rematch/${VERSION}
-          # cp build-linux-x86_64/* cl/rematch/rematch/${VERSION}
-          cp build-linux-arm64/* cl/rematch/rematch/${VERSION}
+          cp build-linux-x86_64/* cl/rematch/rematch/${VERSION}
+          # cp build-linux-arm64/* cl/rematch/rematch/${VERSION}
           cp build-macosx-x86_64/* cl/rematch/rematch/${VERSION}
           cp build-macosx-arm64/* cl/rematch/rematch/${VERSION}
           cp build-common/* cl/rematch/rematch/${VERSION}
