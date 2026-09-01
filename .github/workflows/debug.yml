@@ -35,7 +35,7 @@ jobs:
 
       - name: Install REmatch
         run: |
-          git clone https://github.com/REmatchChile/REmatch.git
+          git clone https://github.com/REmatchChile/REmatch.git -b mvn
           cd REmatch
           cmake -Bbuild -S. \
             -DCMAKE_CXX_COMPILER=clang++ \
