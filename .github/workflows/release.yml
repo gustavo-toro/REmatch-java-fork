@@ -43,8 +43,8 @@ jobs:
           - os: windows-2025
             classifier: windows-x86_64
 
-          - os: ubuntu-24.04-arm
-            classifier: linux-arm64
+          # - os: ubuntu-24.04-arm
+          #   classifier: linux-arm64
 
           - os: ubuntu-24.04
             classifier: linux-x86_64
@@ -71,9 +71,7 @@ jobs:
 
       - name: Print properties
         shell: bash
-        run: |
-          mvn -q help:evaluate -Dexpression="os.arch" -DforceStdout
-          mvn -q help:evaluate -Dexpression="os.name" -DforceStdout
+        run: mvn --version
 
       - name: Configure CMake
         run: cmake -Snative -Bbuild -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
